@@ -107,14 +107,16 @@ class CountriesController extends Controller
         }
         $country = new Country();
 
-        //get countries details
 
+        /******************************************** recode ************************/
+        //get countries details
         $lang_id = $country->translate()->get('id');
 
         $country->country_code = $request->country_code;
         $country->country_id = $request->country_id;
         $country->lang_id = $lang_id;
         $country->country = $request->country;
+        /*********************************************************************************/
 
         if ($country->save()) {
 
