@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Country;
+use App\Models\Language;
 use Illuminate\Http\Request;
 
 /**
@@ -105,29 +106,35 @@ class CountriesController extends Controller
                 'msg' => 'validation error'
             ];
         }
-        $country = new Country();
-
 
         /******************************************** recode ************************/
-        //get countries details
-        $lang_id = $country->translate()->get('id');
 
-        $country->country_code = $request->country_code;
-        $country->country_id = $request->country_id;
-        $country->lang_id = $lang_id;
-        $country->country = $request->country;
+        $ar_id = Language::where('code', 'ar')->first()->id;
+        $en_id = Language::where('code', 'en')->first()->id;
+
+        // insert AR country
+        $country_ar = new Country;
+
+        $country_ar->country_code = $request->country_code_en;
+        if ($country_ar->save()) {
+
+            // insert to trans
+        }
+
+        // insert EN
+
         /*********************************************************************************/
 
-        if ($country->save()) {
-
-            return [
-                'status' => true,
-                'data' => [
-                    'country' => $country
-                ],
-                'msg' => 'data inserted successfully done',
-            ];
-        }
+//        if ($country->save()) {
+//
+//            return [
+//                'status' => true,
+//                'data' => [
+//                    'country' => $country
+//                ],
+//                'msg' => 'data inserted successfully done',
+//            ];
+//        }
 
         return [
             'status' => false,
