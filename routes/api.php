@@ -18,3 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
+// countries routes
+Route::group(['prefix' => 'counties/', 'namespace' => 'API'], function () {
+
+    Route::get('','CountriesController@getAllCountry')->name('countries.getAllCountries');
+    Route::get('{id}','CountriesController@getCountry')->name('countries.getCountry');
+
+});

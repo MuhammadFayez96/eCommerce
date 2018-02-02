@@ -16,6 +16,4 @@ Route::get('/', function () {
 });
 
 
-Route::get('get-country/{id}','CountriesController@getCountry');
-Route::get('get-all-country','CountriesController@getAllCountry');
 

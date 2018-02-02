@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\Country;
-use App\Models\CountryTranslation;
 use Illuminate\Http\Request;
 
 /**
@@ -16,24 +16,24 @@ class CountriesController extends Controller
      * @param $id
      * @return array
      */
-    public function getCountry($id){
+    public function getCountry($id)
+    {
         // search for country
-        $country=Country::where('id',$id)->get();
-        dd($country);
+        $country = Country::find($id);
 
         // if no country, return false status
-        if(!$country){
-            return[
+        if (!$country) {
+            return [
                 'status' => false,
                 'data' => null,
                 'msg' => 'There is no country with this id!'
             ];
         }
         // get country details
-        $country_translated=$country->translate();
-        $country->country_translated=$country_translated;
+        $country_translated = $country->translate();
+        $country->country_translated = $country_translated;
 
-        return[
+        return [
             'status' => true,
             'data' => [
                 'country' => $country,
@@ -46,12 +46,13 @@ class CountriesController extends Controller
     /**
      * @return array
      */
-    public function getAllCountry(){
+    public function getAllCountries()
+    {
         //get All Countries
-        $countries= Country::all();
+        $countries = Country::all();
         dd($countries);
         //check if no countries
-        if(count($countries) == 0){
+        if (count($countries) == 0) {
             return [
                 'status' => false,
                 'data' => null,
@@ -59,10 +60,16 @@ class CountriesController extends Controller
             ];
         }
 
-        //get countries Details
-        $country_translated=$countries->translate();
+        // append translated country to all countries
+        foreach ($countries as $country) {
 
-        $countries->country_translated=$country_translated;
+            // get country details
+            $country_translated = $country->translate();
+
+            // add the translated country as a key => value to main country object
+            // key is country_translated and the value id $country_details
+            $country->country_translated = $country_translated;
+        }
 
         return [
             'status' => true,
@@ -102,12 +109,12 @@ class CountriesController extends Controller
 
         //get countries details
 
-        $lang_id=$country->translate()->get('id');
+        $lang_id = $country->translate()->get('id');
 
-        $country->country_code=$request->country_code;
-        $country->country_id=$request->country_id;
-        $country->lang_id=$lang_id;
-        $country->country=$request->country;
+        $country->country_code = $request->country_code;
+        $country->country_id = $request->country_id;
+        $country->lang_id = $lang_id;
+        $country->country = $request->country;
 
         if ($country->save()) {
 
@@ -165,10 +172,10 @@ class CountriesController extends Controller
 
         $country->country_code = $request->country_code;
         if ($country->save()) {
-            $lang_id=$country->translate()->get('id');
+            $lang_id = $country->translate()->get('id');
             $country_id = $country->countryTrans()->get('id');
-            $country->country_id=$country_id;
-            $country->lang_id=$lang_id;
+            $country->country_id = $country_id;
+            $country->lang_id = $lang_id;
             $country->country = $request->country;
             return [
                 'status' => true,
@@ -191,13 +198,13 @@ class CountriesController extends Controller
      * @param $id
      * @return array
      */
-    public function deleteCountry($id){
+    public function deleteCountry($id)
+    {
         //search  for country
-        $country=Country::find($id);
+        $country = Country::find($id);
 
-        $country_trans=CountryTranslation::where('country_id',$id)->delete();
         //if no country
-        if(!$country){
+        if (!$country) {
             return [
                 'status' => false,
                 'data' => null,
