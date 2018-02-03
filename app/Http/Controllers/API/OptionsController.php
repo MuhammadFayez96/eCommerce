@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Language;
 use App\Models\Option;
+use App\Models\OptionValues;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -32,17 +33,22 @@ class OptionsController extends Controller
             ];
         }
 
+        $optionValue = OptionValues::where('option_id', $id)->first();
 
         $option_translated = $option->translate();
         $option->option_translated = $option_translated;
+
+        $optionValue_translated = $optionValue->translate();
+        $optionValue->optionValue_translated = $optionValue_translated;
 
         //check success display data
         return [
             'status' => true,
             'data' => [
                 'option' => $option,
+                'optionValue' => $optionValue,
             ],
-            'msg' => 'Display option successfully done!!'
+            'msg' => 'Display option and optionValues successfully done!!'
         ];
     }
 
@@ -74,11 +80,35 @@ class OptionsController extends Controller
             $option->option_translated = $option_translated;
         }
 
+        //get all option in db
+        $optionValues = OptionValues::all();
+
+        //check if no options
+        if (count($optionValues) == 0) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no option with this id!!'
+            ];
+        }
+
+        // append translated option to all options
+        foreach ($optionValues as $optionValue) {
+
+            // get option details
+            $optionValue_translated = $optionValue->translate();
+
+            // add the translated option as a key => value to main option object
+            // key is option_translated and the value id $option_translated
+            $optionValue->optionValue_translated = $optionValue_translated;
+        }
+
         //check successfully display all data
         return [
             'status' => true,
             'data' => [
-                'countries' => $options,
+                'options' => $options,
+                'optionValues' => $optionValues,
             ],
             'msg' => 'Display All Options'
         ];
@@ -94,6 +124,7 @@ class OptionsController extends Controller
         // validation options
         $validation_options = [
             'option_name_en' => 'required',
+            'option_value_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_options);
@@ -115,8 +146,22 @@ class OptionsController extends Controller
         // instantiate App\Model\Option - master
         $option = new Option;
 
+        $optionValues = new OptionValues;
+
+        $id = Option::first()->id;
+        $optionValues->option_id = $id;
+
         // check saving success
         if (!$option->save()) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'something went wrong, please try again!'
+            ];
+        }
+
+        // check saving success
+        if (!$optionValues->save()) {
             return [
                 'status' => false,
                 'data' => null,
@@ -130,6 +175,12 @@ class OptionsController extends Controller
             'lang_id' => $en_id,
         ]);
 
+        // store en version
+        $optionValues_en = $optionValues->optionValuesTrans()->create([
+            'value' => $request->option_value_en,
+            'lang_id' => $en_id,
+        ]);
+
         // check saving status
         if (!$option_en) {
             return [
@@ -139,9 +190,18 @@ class OptionsController extends Controller
             ];
         }
 
+        // check saving status
+        if (!$optionValues_en) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'something went wrong while saving EN, please try again!'
+            ];
+        }
+
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->option_name_ar) {
+        if ($request->option_name_ar && $request->option_value_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
@@ -150,8 +210,22 @@ class OptionsController extends Controller
                 'lang_id' => $ar_id,
             ]);
 
+            $optionValues_ar = $optionValues->optionValuesTrans()->create([
+                'Value' => $request->option_value_ar,
+                'lang_id' => $ar_id,
+            ]);
+
             // check save status
             if (!$option_ar) {
+                return [
+                    'status' => false,
+                    'data' => null,
+                    'msg' => 'something went wrong while saving AR, please try again!'
+                ];
+            }
+
+            // check save status
+            if (!$optionValues_ar) {
                 return [
                     'status' => false,
                     'data' => null,
@@ -165,7 +239,9 @@ class OptionsController extends Controller
             'status' => true,
             'data' => [
                 'option' => $option,
-                'optionTrans' => $option->optionTrans()->getResults()
+                'optionTrans' => $option->optionTrans()->getResults(),
+                'optionValues' => $optionValues,
+                'optionValuesTrans' => $optionValues->optionValuesTrans()->getResults()
             ],
             'msg' => 'Data inserted successfully done',
         ];
@@ -181,6 +257,7 @@ class OptionsController extends Controller
         // validation options
         $validation_options = [
             'option_name_en' => 'required',
+            'option_value_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_options);
@@ -195,6 +272,8 @@ class OptionsController extends Controller
         }
         //search option by id
         $option = Option::find($id);
+
+        $optionValue = OptionValues::where('option_id', $id)->first();
 
         //check if no option
         if (!$option) {
@@ -220,12 +299,36 @@ class OptionsController extends Controller
                 ];
             }
 
-            if ($request->option_name_ar) {
+            $optionValue_en = $optionValue->translate(1);
+            $optionValue_en->value = $request->option_value_en;
+
+            // check save status
+            if (!$optionValue_en->save()) {
+                return [
+                    'status' => false,
+                    'data' => null,
+                    'msg' => 'something went wrong while updating EN, please try again!'
+                ];
+            }
+
+            if ($request->option_name_ar && $request->option_value_ar) {
                 $option_ar = $option->translate(2);
                 $option_ar->option = $request->option_name_ar;
 
                 // check save status
                 if (!$option_ar->save()) {
+                    return [
+                        'status' => false,
+                        'data' => null,
+                        'msg' => 'something went wrong while updating AR, please try again!'
+                    ];
+                }
+
+                $optionValue_ar = $optionValue->translate(2);
+                $optionValue_ar->value = $request->option_value_ar;
+
+                // check save status
+                if (!$optionValue_ar->save()) {
                     return [
                         'status' => false,
                         'data' => null,
@@ -239,7 +342,8 @@ class OptionsController extends Controller
             return [
                 'status' => true,
                 'data' => [
-                    'option' => $option
+                    'option' => $option,
+                    'optionValue' => $optionValue,
                 ],
                 'msg' => 'Data updated successfully done',
             ];
@@ -254,6 +358,7 @@ class OptionsController extends Controller
     {
         //search option by id
         $option = Option::find($id);
+        $optionValue = OptionValues::where('option_id', $id)->first();
 
         // check if no option
         if (!$option) {
@@ -264,11 +369,14 @@ class OptionsController extends Controller
             ];
         }
 
-        //delete data from optionTrans
-        $option->optionTrans()->delete();
+        //delete data from optionValuesTrans
+        $optionValue->optionValuesTrans()->delete();
 
         //delete data from optionValues
         $option->optionValues()->delete();
+
+        //delete data from optionTrans
+        $option->optionTrans()->delete();
 
         //delete data from option
         $option->delete();

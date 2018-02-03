@@ -41,19 +41,6 @@ Route::group(['prefix' => 'options/', 'namespace' => 'API'], function () {
 
 });
 
-
-// optionValues routes
-Route::group(['prefix' => 'optionValues/', 'namespace' => 'API'], function () {
-
-    Route::get('','OptionValueController@getAllOptionsValues')->name('optionValue.getAllOptionsValues');
-    Route::get('{id}','OptionValueController@getOptionValue')->name('optionValue.getOptionValue');
-    Route::post('create','OptionValueController@createNewOptionValue')->name('optionValue.createNewOptionValue');
-    Route::patch('update/{id}','OptionValueController@updateOptionValue')->name('optionValue.updateOptionValue');
-    Route::delete('delete/{id}','OptionValueController@deleteOptionValue')->name('optionValue.deleteOptionValue');
-
-});
-
-
 // Menus routes
 Route::group(['prefix' => 'menus/', 'namespace' => 'API'], function () {
 
