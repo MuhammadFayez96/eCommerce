@@ -2,101 +2,91 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Category;
 use App\Models\Language;
-use App\Models\Option;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-/**
- * Class OptionsController
- * @package App\Http\Controllers\API
- */
-class OptionsController extends Controller
+class CategoriesController extends Controller
 {
+    //
 
-    /**
-     * @param $id
-     * @return array
-     */
-    public function getOption($id)
+    public function getCategory($id)
     {
-        //search option by id
-        $option = Option::find($id);
+        //search category by id
+        $category = Category::find($id);
 
-        //check if option not found
-        if (!$option) {
+        //check if category not found
+        if (!$category) {
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'There is no option with this id!'
+                'msg' => 'There is no category with this id!'
             ];
         }
 
 
-        $option_translated = $option->translate();
-        $option->option_translated = $option_translated;
+        $category_translated = $category->translate();
+        $category->category_translated = $category_translated;
 
         //check success display data
         return [
             'status' => true,
             'data' => [
-                'option' => $option,
+                'option' => $category,
             ],
-            'msg' => 'Display option successfully done!!'
+            'msg' => 'Display category successfully done!!'
         ];
+
+
     }
 
-    /**
-     * @return array
-     */
-    public function getAllOptions()
+    public function getAllCategories()
     {
-        //get all option in db
-        $options = Option::all();
+        //get all category from db
+        $categories = Category::all();
 
         //check if no options
-        if (count($options) == 0) {
+        if (count($categories) == 0) {
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'There is no option with this id!!'
+                'msg' => 'There is no category with this id!!'
             ];
         }
 
-        // append translated option to all options
-        foreach ($options as $option) {
+        // append translated category to all categories
+        foreach ($categories as $category) {
 
-            // get option details
-            $option_translated = $option->translate();
+            // get category details
+            $category_translated = $category->translate();
 
-            // add the translated option as a key => value to main option object
-            // key is option_translated and the value id $option_translated
-            $option->option_translated = $option_translated;
+            // add the translated Category as a key => value to main Category object
+            // key is category_translated and the value id $category_translated
+            $category->category_translated = $category_translated;
         }
 
         //check successfully display all data
         return [
             'status' => true,
             'data' => [
-                'countries' => $options,
+                'categories' => $categories,
             ],
-            'msg' => 'Display All Options'
+            'msg' => 'Display All Categories'
         ];
+
     }
 
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function createNewOption(Request $request)
+    public function createNewCategory(Request $request)
     {
-        // validation options
-        $validation_options = [
-            'option_name_en' => 'required',
+        // validation category
+        $validation_categories = [
+            'description_en' => 'required',
+            'notes_en' => 'required',
         ];
 
-        $validation = validator($request->all(), $validation_options);
+        $validation = validator($request->all(), $validation_categories);
 
         // if validation failed, return false response
         if ($validation->fails()) {
@@ -112,11 +102,16 @@ class OptionsController extends Controller
         // store the option in en
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
-        // instantiate App\Model\Option - master
-        $option = new Option;
+        // instantiate App\Model\Category - master
+        $category = new Category;
+
+        $id=Menu::first()->id;
+
+        $category->menu_id=$id;
+        $category->parent_id=0;
 
         // check saving success
-        if (!$option->save()) {
+        if (!$category->save()) {
             return [
                 'status' => false,
                 'data' => null,
@@ -125,13 +120,14 @@ class OptionsController extends Controller
         }
 
         // store en version
-        $option_en = $option->optionTrans()->create([
-            'option' => $request->option_name_en,
+        $category_en = $category->categoryTrans()->create([
+            'description' => $request->description_en,
+            'notes' => $request->notes_en,
             'lang_id' => $en_id,
         ]);
 
         // check saving status
-        if (!$option_en) {
+        if (!$category_en) {
             return [
                 'status' => false,
                 'data' => null,
@@ -141,17 +137,18 @@ class OptionsController extends Controller
 
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->option_name_ar) {
+        if ($request->description_ar && $request->notes_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
-            $option_ar = $option->optionTrans()->create([
-                'option' => $request->option_name_ar,
+            $category_ar = $category->categoryTrans()->create([
+                'description' => $request->description_ar,
+                'notes' => $request->notes_ar,
                 'lang_id' => $ar_id,
             ]);
 
             // check save status
-            if (!$option_ar) {
+            if (!$category_ar) {
                 return [
                     'status' => false,
                     'data' => null,
@@ -160,30 +157,28 @@ class OptionsController extends Controller
             }
         }
 
+
         // check saving success
         return [
             'status' => true,
             'data' => [
-                'option' => $option,
-                'optionTrans' => $option->optionTrans()->getResults()
+                'option' => $category,
+                'optionTrans' => $category->categoryTrans()->getResults()
             ],
             'msg' => 'Data inserted successfully done',
         ];
+
     }
 
-    /**
-     * @param $id
-     * @param Request $request
-     * @return array
-     */
-    public function updateOption($id, Request $request)
+    public function updateCategory($id, Request $request)
     {
-        // validation options
-        $validation_options = [
-            'option_name_en' => 'required',
+        // validation category
+        $validation_categories = [
+            'description_en' => 'required',
+            'notes_en' => 'required',
         ];
 
-        $validation = validator($request->all(), $validation_options);
+        $validation = validator($request->all(), $validation_categories);
 
         // if validation failed, return false response
         if ($validation->fails()) {
@@ -193,26 +188,27 @@ class OptionsController extends Controller
                 'msg' => 'validation error'
             ];
         }
-        //search option by id
-        $option = Option::find($id);
+        //search category by id
+        $category = Category::find($id);
 
-        //check if no option
-        if (!$option) {
+        //check if no category
+        if (!$category) {
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'There is no option with this id!'
+                'msg' => 'There is no category with this id!'
             ];
         }
 
         //check save success
-        if ($option->save()) {
+        if ($category->save()) {
 
-            $option_en = $option->translate(1);
-            $option_en->option = $request->option_name_en;
+            $category_en = $category->translate(1);
+            $category_en->description = $request->description_en;
+            $category_en->notes = $request->notes_en;
 
             // check save status
-            if (!$option_en->save()) {
+            if (!$category_en->save()) {
                 return [
                     'status' => false,
                     'data' => null,
@@ -220,12 +216,13 @@ class OptionsController extends Controller
                 ];
             }
 
-            if ($request->option_name_ar) {
-                $option_ar = $option->translate(2);
-                $option_ar->option = $request->option_name_ar;
+            if ($request->description_ar && $request->description) {
+                $category_ar = $category->translate(2);
+                $category_ar->description = $request->description_ar;
+                $category_ar->notes = $request->notes_ar;
 
                 // check save status
-                if (!$option_ar->save()) {
+                if (!$category_ar->save()) {
                     return [
                         'status' => false,
                         'data' => null,
@@ -239,39 +236,32 @@ class OptionsController extends Controller
             return [
                 'status' => true,
                 'data' => [
-                    'option' => $option
+                    'option' => $category
                 ],
                 'msg' => 'Data updated successfully done',
             ];
         }
     }
 
-    /**
-     * @param $id
-     * @return array
-     */
-    public function deleteOption($id)
+    public function deleteCategory($id)
     {
         //search option by id
-        $option = Option::find($id);
+        $category = Category::find($id);
 
-        // check if no option
-        if (!$option) {
+        // check if no category
+        if (!$category) {
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'There is no option with this id!!'
+                'msg' => 'There is no category with this id!!'
             ];
         }
 
-        //delete data from optionTrans
-        $option->optionTrans()->delete();
+        //delete data from categoryTrans
+        $category->categoryTrans()->delete();
 
-        //delete data from optionValues
-        $option->optionValues()->delete();
-
-        //delete data from option
-        $option->delete();
+        //delete data from category
+        $category->delete();
 
         //check successfully deleted data
         return [

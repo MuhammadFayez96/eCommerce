@@ -51,7 +51,7 @@ class CountriesController extends Controller
     {
         //get All Countries
         $countries = Country::all();
-        dd($countries);
+
         //check if no countries
         if (count($countries) == 0) {
             return [

@@ -57,10 +57,22 @@ Route::group(['prefix' => 'optionValues/', 'namespace' => 'API'], function () {
 // Menus routes
 Route::group(['prefix' => 'menus/', 'namespace' => 'API'], function () {
 
-    Route::get('','MenusController@getAllMenus')->name('Menus.getAllMenus');
-    Route::get('{id}','MenusController@getMenu')->name('Menus.getMenu');
-    Route::post('create','MenusController@createNewMenu')->name('Menus.createNewMenu');
-    Route::patch('update/{id}','MenusController@updateMenu')->name('Menus.updateMenu');
-    Route::delete('delete/{id}','MenusController@deleteMenu')->name('Menus.deleteMenu');
+    Route::get('','MenusController@getAllMenus')->name('menus.getAllMenus');
+    Route::get('{id}','MenusController@getMenu')->name('menus.getMenu');
+    Route::post('create','MenusController@createNewMenu')->name('menus.createNewMenu');
+    Route::patch('update/{id}','MenusController@updateMenu')->name('menus.updateMenu');
+    Route::delete('delete/{id}','MenusController@deleteMenu')->name('menus.deleteMenu');
+
+});
+
+
+// Categories routes
+Route::group(['prefix' => 'categories/', 'namespace' => 'API'], function () {
+
+    Route::get('','CategoriesController@getAllCategories')->name('categories.getAllCategories');
+    Route::get('{id}','CategoriesController@getCategory')->name('categories.getCategory');
+    Route::post('create','CategoriesController@createNewCategory')->name('categories.createNewCategory');
+    Route::patch('update/{id}','CategoriesController@updateCategory')->name('categories.updateCategory');
+    Route::delete('delete/{id}','CategoriesController@deleteCategory')->name('categories.deleteCategory');
 
 });

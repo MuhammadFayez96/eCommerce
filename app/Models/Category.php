@@ -5,27 +5,50 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Category
+ * @package App\Models
+ */
 class Category extends Model
 {
     //
     use SoftDeletes;
 
+    /**
+     * @var string
+     */
     protected $table = "categories";
+    /**
+     * @var array
+     */
     protected $dates = ['deleted_at'];
 
-    public function categoryTrans(){
-        return $this->hasMany('App\Models\CategoryTranslation','category_id','id');
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function categoryTrans()
+    {
+        return $this->hasMany('App\Models\CategoryTranslation', 'category_id', 'id');
     }
 
-    public function menu() {
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function menu()
+    {
         return $this->belongsTo('App\Models\Menu', 'menu_id');
     }
 
-    public function translate ($lange_id = null)
+    /**
+     * @param null $lang_id
+     * @return Model|null|object|static
+     */
+    public function translate($lang_id = null)
     {
-        $local_lange_id = Language::where('lang_code', app()->getLocale())->first()->id;
+        $local_lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
 
-        return $this->categoryTrans()->where('lang_id', $lange_id ? $lange_id : $local_lange_id)->first();
+        return $this->categoryTrans()->where('lang_id', $lang_id ? $lang_id : $local_lang_id)->first();
     }
 
 
