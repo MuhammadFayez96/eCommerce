@@ -91,9 +91,7 @@ class CountriesController extends Controller
         // validation countries
         $validation_countries = [
             'country_code' => 'required',
-            'country_id' => 'required',
-            'lang_id' => 'required',
-            'country' => 'required',
+            'country_name_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_countries);
@@ -109,37 +107,69 @@ class CountriesController extends Controller
 
         /******************************************** recode ************************/
 
-        $ar_id = Language::where('code', 'ar')->first()->id;
+        // choose one language to be the default one, let's make EN is the default
+        // store master country
+        // store the country in en
         $en_id = Language::where('code', 'en')->first()->id;
 
-        // insert AR country
-        $country_ar = new Country;
+        // instantiate App\Model\Country - master
+        $country = new Country;
 
-        $country_ar->country_code = $request->country_code_en;
-        if ($country_ar->save()) {
+        // check saving success
+        if (!$country->save()) {
 
-            // insert to trans
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'something went wrong, please try again!'
+            ];
         }
 
-        // insert EN
+        // store en version
+        $country_en = $country->details()->create([
+            'country' => $request->country_name_en,
+            'lang_id' => $en_id
+        ]);
+
+        // check saving status
+        if (!$country_en) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'something went wrong while saving EN, please try again!'
+            ];
+        }
+
+        // store ar version
+        // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
+
+        if ($request->country_name_ar) {
+
+            $ar_id = Language::where('code', 'ar')->first()->id;
+
+            $country_ar = $country->details()->create([
+                'country' => $request->country_name_ar,
+                'lang_id' => $ar_id
+            ]);
+            // check saving status
+            if (!$country_ar) {
+                return [
+                    'status' => false,
+                    'data' => null,
+                    'msg' => 'something went wrong while saving AR, please try again!'
+                ];
+            }
+        }
 
         /*********************************************************************************/
 
-//        if ($country->save()) {
-//
-//            return [
-//                'status' => true,
-//                'data' => [
-//                    'country' => $country
-//                ],
-//                'msg' => 'data inserted successfully done',
-//            ];
-//        }
 
         return [
-            'status' => false,
-            'data' => null,
-            'msg' => 'Fail!',
+            'status' => true,
+            'data' => [
+                'country' => $country
+            ],
+            'msg' => 'data inserted successfully done',
         ];
     }
 

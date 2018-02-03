@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CountryTranslation extends Model
 {
-    //
+
     use SoftDeletes;
 
     protected $table = "countries_translation";
     protected $dates = ['deleted_at'];
+    protected $fillable = ['country', 'lang_id'];
 
     public function country() {
         return $this->belongsTo('App\Models\Country', 'country_id');
