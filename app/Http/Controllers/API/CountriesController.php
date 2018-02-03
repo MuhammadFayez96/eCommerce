@@ -112,14 +112,13 @@ class CountriesController extends Controller
         // choose one language to be the default one, let's make EN is the default
         // store master country
         // store the country in en
-        $en_id = Language::where('code', 'en')->first()->id;
+        $en_id = Language::where('lang_code', 'en')->first()->id;
 
         // instantiate App\Model\Country - master
         $country = new Country;
 
         // check saving success
         if (!$country->save()) {
-
             return [
                 'status' => false,
                 'data' => null,
@@ -128,7 +127,7 @@ class CountriesController extends Controller
         }
 
         // store en version
-        $country_en = $country->details()->create([
+        $country_en = $country->countyTrans()->create([
             'country' => $request->country_name_en,
             'lang_id' => $en_id
         ]);
@@ -147,9 +146,9 @@ class CountriesController extends Controller
 
         if ($request->country_name_ar) {
 
-            $ar_id = Language::where('code', 'ar')->first()->id;
+            $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
-            $country_ar = $country->details()->create([
+            $country_ar = $country->countyTrans()->create([
                 'country' => $request->country_name_ar,
                 'lang_id' => $ar_id
             ]);
@@ -164,7 +163,6 @@ class CountriesController extends Controller
         }
 
         /*********************************************************************************/
-
 
         return [
             'status' => true,
@@ -217,7 +215,7 @@ class CountriesController extends Controller
             $country_en = $country->translate('en');
             $country_en->country = $request->country_name_en;
 
-            if (!$country_en->save) {
+            if (!$country_en->save()) {
                 return [
                     'status' => false,
                     'data' => null,
@@ -227,18 +225,21 @@ class CountriesController extends Controller
 
             // do the same thing for AR
             if ($request->country_name_ar) {
-
                 // code..
+                $country_ar = $country->translate('ar');
+                $country_ar->country = $request->country_name_ar;
+
+                if (!$country_en->save()) {
+                    return [
+                        'status' => false,
+                        'data' => null,
+                        'msg' => 'something went wrong while updating AR, please try again!'
+                    ];
+                }
             }
 
             /***********/
 
-
-            $lang_id = $country->translate()->get('id');
-            $country_id = $country->countryTrans()->get('id');
-            $country->country_id = $country_id;
-            $country->lang_id = $lang_id;
-            $country->country = $request->country;
             return [
                 'status' => true,
                 'data' => [
@@ -247,12 +248,6 @@ class CountriesController extends Controller
                 'msg' => 'data inserted successfully done',
             ];
         }
-
-        return [
-            'status' => false,
-            'data' => null,
-            'msg' => 'Fail!'
-        ];
     }
 
 
