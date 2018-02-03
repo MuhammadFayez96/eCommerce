@@ -83,6 +83,8 @@ class CountriesController extends Controller
 
 
     /**
+     * create new country
+     *
      * @param Request $request
      * @return array
      */
@@ -183,9 +185,7 @@ class CountriesController extends Controller
         // validation countries
         $validation_countries = [
             'country_code' => 'required',
-            'country_id' => 'required',
-            'lang_id' => 'required',
-            'country' => 'required',
+            'country_name_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_countries);
@@ -211,6 +211,29 @@ class CountriesController extends Controller
 
         $country->country_code = $request->country_code;
         if ($country->save()) {
+
+            /*** new ***/
+
+            $country_en = $country->translate('en');
+            $country_en->country = $request->country_name_en;
+
+            if (!$country_en->save) {
+                return [
+                    'status' => false,
+                    'data' => null,
+                    'msg' => 'something went wrong while updating EN, please try again!'
+                ];
+            }
+
+            // do the same thing for AR
+            if ($request->country_name_ar) {
+
+                // code..
+            }
+
+            /***********/
+
+
             $lang_id = $country->translate()->get('id');
             $country_id = $country->countryTrans()->get('id');
             $country->country_id = $country_id;
