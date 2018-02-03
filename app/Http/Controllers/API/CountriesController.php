@@ -117,6 +117,8 @@ class CountriesController extends Controller
         // instantiate App\Model\Country - master
         $country = new Country;
 
+        $country->country_code = $request->country_code;
+
         // check saving success
         if (!$country->save()) {
             return [
@@ -143,7 +145,6 @@ class CountriesController extends Controller
 
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-
         if ($request->country_name_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
@@ -152,6 +153,7 @@ class CountriesController extends Controller
                 'country' => $request->country_name_ar,
                 'lang_id' => $ar_id
             ]);
+
             // check saving status
             if (!$country_ar) {
                 return [
@@ -167,7 +169,8 @@ class CountriesController extends Controller
         return [
             'status' => true,
             'data' => [
-                'country' => $country
+                'country' => $country,
+                'countryTrans' => $country->countyTrans()->getResults()
             ],
             'msg' => 'data inserted successfully done',
         ];
@@ -212,7 +215,7 @@ class CountriesController extends Controller
 
             /*** new ***/
 
-            $country_en = $country->translate('en');
+            $country_en = $country->translate(1);
             $country_en->country = $request->country_name_en;
 
             if (!$country_en->save()) {
@@ -226,7 +229,7 @@ class CountriesController extends Controller
             // do the same thing for AR
             if ($request->country_name_ar) {
                 // code..
-                $country_ar = $country->translate('ar');
+                $country_ar = $country->translate(2);
                 $country_ar->country = $request->country_name_ar;
 
                 if (!$country_en->save()) {
@@ -245,7 +248,7 @@ class CountriesController extends Controller
                 'data' => [
                     'country' => $country
                 ],
-                'msg' => 'data inserted successfully done',
+                'msg' => 'data updated successfully done',
             ];
         }
     }
@@ -270,13 +273,12 @@ class CountriesController extends Controller
         }
 
         //delete country
-        $country->details()->delete();
+        $country->countyTrans()->delete();
         $country->delete();
         return [
-            'status' => false,
+            'status' => True,
             'data' => null,
             'msg' => 'data is deleted successfully!'
         ];
     }
-
 }
