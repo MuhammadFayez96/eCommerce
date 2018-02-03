@@ -270,6 +270,7 @@ class CountriesController extends Controller
         }
 
         //delete country
+        $country->details()->delete();
         $country->delete();
         return [
             'status' => false,
