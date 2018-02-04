@@ -30,6 +30,11 @@ class Product extends Model
         return $this->hasMany('App\Models\ProductOptionValues', 'product_id', 'id');
     }
 
+    public function normalProductDetails()
+    {
+        return $this->hasMany('App\Models\NormalProductDetails', 'product_id', 'id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -55,14 +60,14 @@ class Product extends Model
     }
 
     /**
-     * @param null $lange_id
+     * @param null $lang_id
      * @return Model|null|object|static
      */
-    public function translate($lange_id = null)
+    public function translate($lang_id = null)
     {
-        $local_lange_id = Language::where('lang_code', app()->getLocale())->first()->id;
+        $local_lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
 
-        return $this->productTrans()->where('lang_id', $lange_id ? $lange_id : $local_lange_id)->first();
+        return $this->productTrans()->where('lang_id', $lang_id ? $lang_id : $local_lang_id)->first();
     }
 
 
