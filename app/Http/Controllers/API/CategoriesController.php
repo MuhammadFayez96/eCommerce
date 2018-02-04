@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\Menu;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -118,10 +119,10 @@ class CategoriesController extends Controller
         // instantiate App\Model\Category - master
         $category = new Category;
 
-        $id=Menu::first()->id;
+        $id = Menu::first()->id;
 
-        $category->menu_id=$id;
-        $category->parent_id=0;
+        $category->menu_id = $id;
+        $category->parent_id = 0;
 
         // check saving success
         if (!$category->save()) {
@@ -267,7 +268,7 @@ class CategoriesController extends Controller
      */
     public function deleteCategory($id)
     {
-        //search option by id
+        //search category by id
         $category = Category::find($id);
 
         // check if no category
@@ -279,8 +280,16 @@ class CategoriesController extends Controller
             ];
         }
 
+        $product = Product::where('category_id', $id)->first();
+
         //delete data from categoryTrans
         $category->categoryTrans()->delete();
+
+        //delete data from products
+        $category->products()->delete();
+
+        //delete data from products
+        $product->productTrans()->delete();
 
         //delete data from category
         $category->delete();
@@ -292,4 +301,5 @@ class CategoriesController extends Controller
             'msg' => 'Data Deleted Successfully!'
         ];
     }
+//    }
 }

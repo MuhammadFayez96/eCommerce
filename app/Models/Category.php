@@ -32,6 +32,15 @@ class Category extends Model
         return $this->hasMany('App\Models\CategoryTranslation', 'category_id', 'id');
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products()
+    {
+        return $this->hasMany('App\Models\Product', 'category_id', 'id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

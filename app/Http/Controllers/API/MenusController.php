@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Category;
 use App\Models\Language;
 use App\Models\Menu;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -268,9 +270,26 @@ class MenusController extends Controller
                 'msg' => 'There is no menu with this id!!'
             ];
         }
+        $category = Category::where('menu_id', $id)->first();
+
+        $category_id = Category::where('menu_id', $id)->first()->id;
+
+        $product=Product::where('category_id',$category_id)->first();
 
         //delete data from optionTrans
         $menu->menuTrans()->delete();
+
+        //delete data from categories
+        $menu->categories()->delete();
+
+        //delete data from categoryTrans
+        $category->categoryTrans()->delete();
+
+        //delete data from products
+        $category->products()->delete();
+
+        //delete data from productTrans
+        $product->productTrans()->delete();
 
         //delete data from option
         $menu->delete();

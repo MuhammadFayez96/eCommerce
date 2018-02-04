@@ -30,8 +30,13 @@ class Menu extends Model
         return $this->hasMany('App\Models\MenuTranslation', 'menu_id', 'id');
     }
 
+    public function categories()
+    {
+        return $this->hasMany('App\Models\Category', 'menu_id', 'id');
+    }
+
     /**
-     * @param null $lange_id
+     * @param null $lang_id
      * @return Model|null|object|static
      */
     public function translate($lang_id = null)

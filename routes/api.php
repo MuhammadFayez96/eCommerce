@@ -72,3 +72,14 @@ Route::group(['prefix' => 'roles/', 'namespace' => 'API'], function () {
     Route::patch('update/{id}', 'RolesController@updateRole')->name('roles.updateRole');
     Route::delete('delete/{id}', 'RolesController@deleteRole')->name('roles.deleteRole');
 });
+
+
+// products routes
+Route::group(['prefix' => 'products/', 'namespace' => 'API'], function () {
+
+    Route::get('', 'ProductsController@getAllProducts')->name('products.getAllProducts');
+    Route::get('{id}', 'ProductsController@getProduct')->name('products.getProduct');
+//    Route::post('create', 'ProductsController@createNewProduct')->name('products.createNewProduct');
+//    Route::patch('update/{id}', 'ProductsController@updateProduct')->name('products.updateProduct');
+    Route::delete('delete/{id}', 'ProductsController@deleteProduct')->name('products.deleteProduct');
+});
