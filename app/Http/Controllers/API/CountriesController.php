@@ -213,8 +213,6 @@ class CountriesController extends Controller
         $country->country_code = $request->country_code;
         if ($country->save()) {
 
-            /*** new ***/
-
             $country_en = $country->translate(1);
             $country_en->country = $request->country_name_en;
 
@@ -228,11 +226,11 @@ class CountriesController extends Controller
 
             // do the same thing for AR
             if ($request->country_name_ar) {
-                // code..
+
                 $country_ar = $country->translate(2);
                 $country_ar->country = $request->country_name_ar;
 
-                if (!$country_en->save()) {
+                if (!$country_ar->save()) {
                     return [
                         'status' => false,
                         'data' => null,
@@ -240,8 +238,6 @@ class CountriesController extends Controller
                     ];
                 }
             }
-
-            /***********/
 
             return [
                 'status' => true,

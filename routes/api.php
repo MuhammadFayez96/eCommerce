@@ -63,3 +63,13 @@ Route::group(['prefix' => 'categories/', 'namespace' => 'API'], function () {
     Route::delete('delete/{id}','CategoriesController@deleteCategory')->name('categories.deleteCategory');
 
 });
+
+// roles routes
+Route::group(['prefix' => 'roles/', 'namespace' => 'API'], function () {
+
+    Route::get('','RolesController@getAllRoles')->name('roles.getAllRoles');
+    Route::get('{id}','RolesController@getRole')->name('roles.getRole');
+    Route::post('create','RolesController@createNewRole')->name('roles.createNewRole');
+    Route::patch('update/{id}','RolesController@updateRole')->name('roles.updateRole');
+    Route::delete('delete/{id}','RolesController@deleteRole')->name('roles.deleteRole');
+});
