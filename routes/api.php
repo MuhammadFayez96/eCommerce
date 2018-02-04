@@ -21,34 +21,33 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // countries routes
 Route::group(['prefix' => 'counties/', 'namespace' => 'API'], function () {
 
-    Route::get('','CountriesController@getAllCountries')->name('countries.getAllCountries');
-    Route::get('{id}','CountriesController@getCountry')->name('countries.getCountry');
-    Route::post('create','CountriesController@createNewCountry')->name('countries.createNewCountry');
-    Route::patch('update/{id}','CountriesController@updateCountry')->name('countries.updateCountry');
-    Route::delete('delete/{id}','CountriesController@deleteCountry')->name('countries.deleteCountry');
+    Route::get('', 'CountriesController@getAllCountries')->name('countries.getAllCountries');
+    Route::get('{id}', 'CountriesController@getCountry')->name('countries.getCountry');
+    Route::post('create', 'CountriesController@createNewCountry')->name('countries.createNewCountry');
+    Route::patch('update/{id}', 'CountriesController@updateCountry')->name('countries.updateCountry');
+    Route::delete('delete/{id}', 'CountriesController@deleteCountry')->name('countries.deleteCountry');
 });
-
 
 
 // options routes
 Route::group(['prefix' => 'options/', 'namespace' => 'API'], function () {
 
-    Route::get('','OptionsController@getAllOptions')->name('options.getAllOptions');
-    Route::get('{id}','OptionsController@getOption')->name('options.getOption');
-    Route::post('create','OptionsController@createNewOption')->name('options.createNewOption');
-    Route::patch('update/{id}','OptionsController@updateOption')->name('options.updateOption');
-    Route::delete('delete/{id}','OptionsController@deleteOption')->name('options.deleteOption');
+    Route::get('', 'OptionsController@getAllOptions')->name('options.getAllOptions');
+    Route::get('{id}', 'OptionsController@getOption')->name('options.getOption');
+    Route::post('create', 'OptionsController@createNewOption')->name('options.createNewOption');
+    Route::patch('update/{id}', 'OptionsController@updateOption')->name('options.updateOption');
+    Route::delete('delete/{id}', 'OptionsController@deleteOption')->name('options.deleteOption');
 
 });
 
 // Menus routes
 Route::group(['prefix' => 'menus/', 'namespace' => 'API'], function () {
 
-    Route::get('','MenusController@getAllMenus')->name('menus.getAllMenus');
-    Route::get('{id}','MenusController@getMenu')->name('menus.getMenu');
-    Route::post('create','MenusController@createNewMenu')->name('menus.createNewMenu');
-    Route::patch('update/{id}','MenusController@updateMenu')->name('menus.updateMenu');
-    Route::delete('delete/{id}','MenusController@deleteMenu')->name('menus.deleteMenu');
+    Route::get('', 'MenusController@getAllMenus')->name('menus.getAllMenus');
+    Route::get('{id}', 'MenusController@getMenu')->name('menus.getMenu');
+    Route::post('create', 'MenusController@createNewMenu')->name('menus.createNewMenu');
+    Route::patch('update/{id}', 'MenusController@updateMenu')->name('menus.updateMenu');
+    Route::delete('delete/{id}', 'MenusController@deleteMenu')->name('menus.deleteMenu');
 
 });
 
@@ -56,20 +55,20 @@ Route::group(['prefix' => 'menus/', 'namespace' => 'API'], function () {
 // Categories routes
 Route::group(['prefix' => 'categories/', 'namespace' => 'API'], function () {
 
-    Route::get('','CategoriesController@getAllCategories')->name('categories.getAllCategories');
-    Route::get('{id}','CategoriesController@getCategory')->name('categories.getCategory');
-    Route::post('create','CategoriesController@createNewCategory')->name('categories.createNewCategory');
-    Route::patch('update/{id}','CategoriesController@updateCategory')->name('categories.updateCategory');
-    Route::delete('delete/{id}','CategoriesController@deleteCategory')->name('categories.deleteCategory');
+    Route::get('', 'CategoriesController@getAllCategories')->name('categories.getAllCategories');
+    Route::get('{id}', 'CategoriesController@getCategory')->name('categories.getCategory');
+    Route::post('create', 'CategoriesController@createNewCategory')->name('categories.createNewCategory');
+    Route::patch('update/{id}', 'CategoriesController@updateCategory')->name('categories.updateCategory');
+    Route::delete('delete/{id}', 'CategoriesController@deleteCategory')->name('categories.deleteCategory');
 
 });
 
 // roles routes
 Route::group(['prefix' => 'roles/', 'namespace' => 'API'], function () {
 
-    Route::get('','RolesController@getAllRoles')->name('roles.getAllRoles');
-    Route::get('{id}','RolesController@getRole')->name('roles.getRole');
-    Route::post('create','RolesController@createNewRole')->name('roles.createNewRole');
-    Route::patch('update/{id}','RolesController@updateRole')->name('roles.updateRole');
-    Route::delete('delete/{id}','RolesController@deleteRole')->name('roles.deleteRole');
+    Route::get('', 'RolesController@getAllRoles')->name('roles.getAllRoles');
+    Route::get('{id}', 'RolesController@getRole')->name('roles.getRole');
+    Route::post('create', 'RolesController@createNewRole')->name('roles.createNewRole');
+    Route::patch('update/{id}', 'RolesController@updateRole')->name('roles.updateRole');
+    Route::delete('delete/{id}', 'RolesController@deleteRole')->name('roles.deleteRole');
 });

@@ -13,16 +13,16 @@ use App\Http\Controllers\Controller;
  */
 class MenusController extends Controller
 {
-    //
-
     /**
      * @param $id
      * @return array
      */
     public function getMenu($id)
     {
+        //find menu by id
         $menu = Menu::find($id);
 
+        //check if no menu
         if (!$menu) {
             return [
                 'status' => false,
@@ -65,7 +65,7 @@ class MenusController extends Controller
         // append translated menu to all menus
         foreach ($menus as $menu) {
 
-            // get option details
+            // get menu details
             $menu_translated = $menu->translate();
 
             // add the translated menu as a key => value to main menu object

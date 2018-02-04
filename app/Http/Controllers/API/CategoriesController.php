@@ -8,10 +8,16 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class CategoriesController
+ * @package App\Http\Controllers\API
+ */
 class CategoriesController extends Controller
 {
-    //
-
+    /**
+     * @param $id
+     * @return array
+     */
     public function getCategory($id)
     {
         //search category by id
@@ -42,12 +48,15 @@ class CategoriesController extends Controller
 
     }
 
+    /**
+     * @return array
+     */
     public function getAllCategories()
     {
         //get all category from db
         $categories = Category::all();
 
-        //check if no options
+        //check if no Category
         if (count($categories) == 0) {
             return [
                 'status' => false,
@@ -78,6 +87,10 @@ class CategoriesController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function createNewCategory(Request $request)
     {
         // validation category
@@ -98,8 +111,8 @@ class CategoriesController extends Controller
         }
 
         // choose one language to be the default one, let's make EN is the default
-        // store master option
-        // store the option in en
+        // store master category
+        // store the category in en
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
         // instantiate App\Model\Category - master
@@ -170,6 +183,11 @@ class CategoriesController extends Controller
 
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
     public function updateCategory($id, Request $request)
     {
         // validation category
@@ -243,6 +261,10 @@ class CategoriesController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function deleteCategory($id)
     {
         //search option by id

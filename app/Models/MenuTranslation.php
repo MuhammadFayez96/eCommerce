@@ -25,7 +25,7 @@ class MenuTranslation extends Model
     /**
      * @var array
      */
-    protected $fillable = ['description','notes', 'lang_id'];
+    protected $fillable = ['description', 'notes', 'lang_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

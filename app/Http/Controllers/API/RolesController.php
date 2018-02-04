@@ -7,11 +7,21 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class RolesController
+ * @package App\Http\Controllers\API
+ */
 class RolesController extends Controller
 {
+    /**
+     * @param $id
+     * @return array
+     */
     public function getRole($id)
     {
+        //find role by id
         $role = Role::find($id);
+
         // if no role, return false status
         if (!$role) {
             return [
@@ -20,10 +30,13 @@ class RolesController extends Controller
                 'msg' => 'There is no Role with this id!'
             ];
         }
+
         // get role details
         $role_translated = $role->translate();
+
         $role->role_translated = $role_translated;
 
+        // check success status
         return [
             'status' => true,
             'data' => [
@@ -35,6 +48,9 @@ class RolesController extends Controller
     }
 
 
+    /**
+     * @return array
+     */
     public function getAllRoles()
     {
         //get All Roles
@@ -60,18 +76,23 @@ class RolesController extends Controller
             $role->role_translated = $role_translated;
         }
 
+        //check success status
         return [
             'status' => true,
             'data' => [
-                'roles' => $role,
+                'roles' => $roles,
             ],
             'msg' => 'Display All Countries'
         ];
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function createNewRole(Request $request)
     {
-        // validation countries
+        // validation roles
         $validation_roles = [
             'role' => 'required',
             'role_displayName_en' => 'required',
@@ -159,6 +180,11 @@ class RolesController extends Controller
         ];
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
     public function updateRole($id, Request $request)
     {
         // validation roles
@@ -236,6 +262,10 @@ class RolesController extends Controller
     }
 
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function deleteRole($id)
     {
         //search  for role

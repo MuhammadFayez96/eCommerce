@@ -107,8 +107,6 @@ class CountriesController extends Controller
             ];
         }
 
-        /******************************************** recode ************************/
-
         // choose one language to be the default one, let's make EN is the default
         // store master country
         // store the country in en
@@ -164,8 +162,7 @@ class CountriesController extends Controller
             }
         }
 
-        /*********************************************************************************/
-
+        // check success status
         return [
             'status' => true,
             'data' => [
@@ -201,6 +198,8 @@ class CountriesController extends Controller
         }
 
         $country = Country::find($id);
+
+        //check if no country
         if (!$country) {
             return [
                 'status' => false,
@@ -211,11 +210,14 @@ class CountriesController extends Controller
 
 
         $country->country_code = $request->country_code;
+
+        //c heck save success status
         if ($country->save()) {
 
             $country_en = $country->translate(1);
             $country_en->country = $request->country_name_en;
 
+            // check saving success
             if (!$country_en->save()) {
                 return [
                     'status' => false,
@@ -239,6 +241,7 @@ class CountriesController extends Controller
                 }
             }
 
+            // check saving success
             return [
                 'status' => true,
                 'data' => [
