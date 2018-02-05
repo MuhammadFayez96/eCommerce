@@ -22,6 +22,12 @@ class ProductTranslation extends Model
      */
     protected $dates = ['deleted_at'];
 
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['type', 'name', 'description', 'notes', 'lang_id'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

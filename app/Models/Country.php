@@ -32,6 +32,10 @@ class Country extends Model
     }
 
 
+    public function city()
+    {
+        return $this->hasMany('App\Models\City', 'country_id', 'id');
+    }
     /**
      * @param null $lang_id
      * @return Model|null|object|static

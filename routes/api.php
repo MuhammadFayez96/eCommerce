@@ -18,14 +18,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-// countries routes
-Route::group(['prefix' => 'counties/', 'namespace' => 'API'], function () {
+// addresses routes
+Route::group(['prefix' => 'addresses/', 'namespace' => 'API'], function () {
 
-    Route::get('', 'CountriesController@getAllCountries')->name('countries.getAllCountries');
-    Route::get('{id}', 'CountriesController@getCountry')->name('countries.getCountry');
-    Route::post('create', 'CountriesController@createNewCountry')->name('countries.createNewCountry');
-    Route::patch('update/{id}', 'CountriesController@updateCountry')->name('countries.updateCountry');
-    Route::delete('delete/{id}', 'CountriesController@deleteCountry')->name('countries.deleteCountry');
+    //countries routes
+    Route::get('countries', 'AddressesController@getAllCountries')->name('countries.getAllCountries');
+    Route::get('countries/{id}', 'AddressesController@getCountry')->name('countries.getCountry');
+    Route::post('countries/create', 'AddressesController@createNewCountry')->name('countries.createNewCountry');
+    Route::patch('countries/update/{id}', 'AddressesController@updateCountry')->name('countries.updateCountry');
+    Route::delete('countries/delete/{id}', 'AddressesController@deleteCountry')->name('countries.deleteCountry');
+
+    //cities routes
+    Route::get('cities', 'AddressesController@getAllCities')->name('cities.getAllCities');
+    Route::get('cities/{id}', 'AddressesController@getCity')->name('cities.getCity');
+    Route::post('cities/create', 'AddressesController@createNewCity')->name('cities.createNewCity');
+    Route::patch('cities/update/{id}', 'AddressesController@updateCity')->name('cities.updateCity');
+    Route::delete('cities/delete/{id}', 'AddressesController@deleteCity')->name('cities.deleteCity');
+
+
 });
 
 
@@ -79,7 +89,8 @@ Route::group(['prefix' => 'products/', 'namespace' => 'API'], function () {
 
     Route::get('', 'ProductsController@getAllProducts')->name('products.getAllProducts');
     Route::get('{id}', 'ProductsController@getProduct')->name('products.getProduct');
-//    Route::post('create', 'ProductsController@createNewProduct')->name('products.createNewProduct');
+    Route::post('create', 'ProductsController@createNewProduct')->name('products.createNewProduct');
+//    Route::post('create', 'ProductsController@createNewNormalProduct')->name('products.createNewProduct');
 //    Route::patch('update/{id}', 'ProductsController@updateProduct')->name('products.updateProduct');
     Route::delete('delete/{id}', 'ProductsController@deleteProduct')->name('products.deleteProduct');
 });
