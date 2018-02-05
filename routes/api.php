@@ -90,7 +90,17 @@ Route::group(['prefix' => 'products/', 'namespace' => 'API'], function () {
     Route::get('', 'ProductsController@getAllProducts')->name('products.getAllProducts');
     Route::get('{id}', 'ProductsController@getProduct')->name('products.getProduct');
     Route::post('create', 'ProductsController@createNewProduct')->name('products.createNewProduct');
-//    Route::post('create', 'ProductsController@createNewNormalProduct')->name('products.createNewProduct');
-//    Route::patch('update/{id}', 'ProductsController@updateProduct')->name('products.updateProduct');
+    Route::patch('update/{id}', 'ProductsController@updateProduct')->name('products.updateProduct');
     Route::delete('delete/{id}', 'ProductsController@deleteProduct')->name('products.deleteProduct');
 });
+
+// bought routes
+Route::group(['prefix' => 'boughts/', 'namespace' => 'API'], function () {
+
+    Route::get('', 'BoughtsController@getAllBoughts')->name('boughts.getAllBoughts');
+    Route::get('{id}', 'BoughtsController@getBought')->name('boughts.getBought');
+    Route::post('create', 'BoughtsController@createNewBought')->name('boughts.createNewBought');
+    Route::patch('update/{id}', 'BoughtsController@updateBought')->name('boughts.updateBought');
+    Route::delete('delete/{id}', 'BoughtsController@deleteBought')->name('boughts.deleteBought');
+});
+

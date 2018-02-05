@@ -255,7 +255,7 @@ class CategoriesController extends Controller
             return [
                 'status' => true,
                 'data' => [
-                    'option' => $category
+                    'category' => $category
                 ],
                 'msg' => 'Data updated successfully done',
             ];

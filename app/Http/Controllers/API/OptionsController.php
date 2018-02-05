@@ -359,6 +359,7 @@ class OptionsController extends Controller
         //search option by id
         $option = Option::find($id);
         $optionValue = OptionValues::where('option_id', $id)->first();
+//        $option_value_id = OptionValues::where('option_id', $id)->first()->id;
 
         // check if no option
         if (!$option) {
@@ -371,6 +372,9 @@ class OptionsController extends Controller
 
         //delete data from optionValuesTrans
         $optionValue->optionValuesTrans()->delete();
+
+        //delete data from productOptionValuesDetails
+        $optionValue->productOptionValuesDetails()->delete();
 
         //delete data from optionValues
         $option->optionValues()->delete();

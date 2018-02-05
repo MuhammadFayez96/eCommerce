@@ -5,18 +5,36 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Bought
+ * @package App\Models
+ */
 class Bought extends Model
 {
     //
     use SoftDeletes;
-    protected $table = "bought";
+    /**
+     * @var string
+     */
+    protected $table = "boughts";
+    /**
+     * @var array
+     */
     protected $dates = ['deleted_at'];
 
-    public function user() {
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
-    public function boughtDetails(){
-        return $this->hasMany('App\Models\BoughtDetails','bought_id','id');
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function boughtDetails()
+    {
+        return $this->hasMany('App\Models\BoughtDetails', 'bought_id', 'id');
     }
 }

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\NormalProductDetails;
+use App\Models\OptionValues;
 use App\Models\Product;
 use App\Models\ProductOptionValues;
+use App\Models\ProductOptionValuesDetails;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Tests\NewRequest;
+
 
 /**
  * Class ProductsController
@@ -39,6 +41,7 @@ class ProductsController extends Controller
         $product_translated = $product->translate();
 
         $product->product_translated = $product_translated;
+
 
         // check success status
         return [
@@ -86,10 +89,13 @@ class ProductsController extends Controller
             ],
             'msg' => 'Display All Countries'
         ];
-
     }
 
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function createNewProduct(Request $request)
     {
         // validation products
@@ -177,9 +183,10 @@ class ProductsController extends Controller
 
             $this->createNewNormalProduct($request);
 
-        } elseif ($request->type_en = 'withPrice') {
+        }
+        if ($request->type_en = 'withPrice') {
 
-            $this->createNewProductOtionValues($request);
+            $this->createNewProductOptionValues($request);
 
         }
 
@@ -195,17 +202,21 @@ class ProductsController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function createNewNormalProduct(Request $request)
     {
         // validation products
         $validation_normalProducts = [
-            'price_en' => 'required',
-            'serial_en' => 'required',
-            'modelNumber_en' => 'required',
-            'barcode_en' => 'required',
-            'discount_en' => 'required',
-            'stock_en' => 'required',
-            'discount_type_en' => 'required',
+            'price' => 'required',
+            'serial' => 'required',
+            'modelNumber' => 'required',
+            'barcode' => 'required',
+            'discount' => 'required',
+            'stock' => 'required',
+            'discount_type' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_normalProducts);
@@ -219,17 +230,18 @@ class ProductsController extends Controller
             ];
         }
 
-        // choose one language to be the default one, let's make EN is the default
-        // store master product
-        // store the product in en
-        $en_id = Language::where('lang_code', 'en')->first()->id;
-
-        // instantiate App\Model\Role - master
         $normalProduct = new NormalProductDetails;
-        $product = new Product;
 
         $product_id = Product::first()->id;
+
         $normalProduct->product_id = $product_id;
+        $normalProduct->price = $request->price;
+        $normalProduct->serial = $request->serial;
+        $normalProduct->model_number = $request->modelNumber;
+        $normalProduct->barcode = $request->barcode;
+        $normalProduct->discount = $request->discount;
+        $normalProduct->stock = $request->stock;
+        $normalProduct->discount_type = $request->discount_type;
 
         if (!$normalProduct->save()) {
             return [
@@ -237,54 +249,6 @@ class ProductsController extends Controller
                 'data' => null,
                 'msg' => 'There is no product with this id!'
             ];
-        }
-        // store en version
-        $normalProduct_en = $product->normalProductDetails()->create([
-            'discount_type' => $request->discount_type_en,
-            'price' => $request->price_en,
-            'serial' => $request->serial_en,
-            'modelNumber' => $request->modelNumber_en,
-            'barcode' => $request->barcode_en,
-            'discount' => $request->discount_en,
-            'stock' => $request->stock_en,
-            'lang_id' => $en_id
-        ]);
-
-        // check saving status
-        if (!$normalProduct_en) {
-            return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'something went wrong while saving EN, please try again!'
-            ];
-        }
-
-
-        // store ar version
-        // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->price_ar && $request->serial_ar && $request->modelNumber_ar && $request->barcode_ar && $request->discount_ar && $request->stock_ar && $request->discount_type_ar) {
-
-            $ar_id = Language::where('lang_code', 'ar')->first()->id;
-
-            $normalProduct_ar = $product->normalProductDetails()->create([
-                'discount_type' => $request->discount_type_ar,
-                'price' => $request->price_ar,
-                'serial' => $request->serial_ar,
-                'modelNumber' => $request->modelNumber_ar,
-                'barcode' => $request->barcode_ar,
-                'discount' => $request->discount_ar,
-                'stock' => $request->stock_ar,
-                'lang_id' => $ar_id
-            ]);
-
-            // check saving status
-            if (!$normalProduct_ar) {
-                return [
-                    'status' => false,
-                    'data' => null,
-                    'msg' => 'something went wrong while saving AR, please try again!'
-                ];
-            }
         }
 
         return [
@@ -297,20 +261,24 @@ class ProductsController extends Controller
     }
 
 
-    public function createNewProductOtionValues(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function createNewProductOptionValues(Request $request)
     {
-
+//        dd($request->all());
         // validation products
-        $validation_normalProducts = [
-            'price_en' => 'required',
-            'serial_en' => 'required',
-            'modelNumber_en' => 'required',
-            'barcode_en' => 'required',
-            'discount_en' => 'required',
-            'stock_en' => 'required',
+        $validation_productOptionValues = [
+            'price' => 'required',
+            'serial' => 'required',
+            'modelNumber' => 'required',
+            'barcode' => 'required',
+            'discount' => 'required',
+            'stock' => 'required',
         ];
 
-        $validation = validator($request->all(), $validation_normalProducts);
+        $validation = validator($request->all(), $validation_productOptionValues);
 
         // if validation failed, return false response
         if ($validation->fails()) {
@@ -321,17 +289,17 @@ class ProductsController extends Controller
             ];
         }
 
-        // choose one language to be the default one, let's make EN is the default
-        // store master product
-        // store the product in en
-        $en_id = Language::where('lang_code', 'en')->first()->id;
 
-        // instantiate App\Model\Role - master
         $productOptionValues = new ProductOptionValues;
-        $product = new Product;
 
         $product_id = Product::first()->id;
         $productOptionValues->product_id = $product_id;
+        $productOptionValues->price = $request->price;
+        $productOptionValues->serial = $request->serial;
+        $productOptionValues->model_number = $request->modelNumber;
+        $productOptionValues->barcode = $request->barcode;
+        $productOptionValues->discount = $request->discount;
+        $productOptionValues->stock = $request->stock;
 
         if (!$productOptionValues->save()) {
             return [
@@ -340,62 +308,32 @@ class ProductsController extends Controller
                 'msg' => 'There is no product with this id!'
             ];
         }
-        // store en version
-        $productOptionValues_en = $product->productOptionValue()->create([
-            'price' => $request->price_en,
-            'serial' => $request->serial_en,
-            'modelNumber' => $request->modelNumber_en,
-            'barcode' => $request->barcode_en,
-            'discount' => $request->discount_en,
-            'stock' => $request->stock_en,
-            'lang_id' => $en_id
-        ]);
 
-        // check saving status
-        if (!$productOptionValues_en) {
+
+        $productOptionValuesDetails = new ProductOptionValuesDetails;
+
+        $productOptionValuesDetails->option_value_id = 1;
+        $productOptionValuesDetails->product_option_value_id = 1;
+
+        if ($productOptionValuesDetails->save()) {
             return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'something went wrong while saving EN, please try again!'
+                'status' => true,
+                'data' => [
+                    'productOptionValues' => $productOptionValues,
+                ],
+                'msg' => 'Data inserted successfully done',
             ];
+
         }
 
-        // store ar version
-        // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->price_ar && $request->serial_ar && $request->modelNumber_ar && $request->barcode_ar && $request->discount_ar && $request->stock_ar) {
-
-            $ar_id = Language::where('lang_code', 'ar')->first()->id;
-
-            $productOptionValues_ar = $product->productOptionValue()->create([
-                'price' => $request->price_ar,
-                'serial' => $request->serial_ar,
-                'modelNumber' => $request->modelNumber_ar,
-                'barcode' => $request->barcode_ar,
-                'discount' => $request->discount_ar,
-                'stock' => $request->stock_ar,
-                'lang_id' => $ar_id
-            ]);
-
-            // check saving status
-            if (!$productOptionValues_ar) {
-                return [
-                    'status' => false,
-                    'data' => null,
-                    'msg' => 'something went wrong while saving AR, please try again!'
-                ];
-            }
-        }
-
-        return [
-            'status' => true,
-            'data' => [
-                'productOptionValues' => $productOptionValues,
-            ],
-            'msg' => 'Data inserted successfully done',
-        ];
     }
 
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
     public function updateProduct($id, Request $request)
     {
         // validation products
@@ -417,8 +355,208 @@ class ProductsController extends Controller
             ];
         }
 
+        $product = Product::find($id);
+
+        //check if no product
+        if (!$product) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product with this id!'
+            ];
+        }
+
+        //check save status
+        if ($product->save()) {
+
+            $product_en = $product->translate(1);
+            $product_en->type = $request->type_en;
+            $product_en->name = $request->name_en;
+            $product_en->description = $request->description_en;
+            $product_en->notes = $request->notes_en;
+
+            // check save status
+            if (!$product_en->save()) {
+                return [
+                    'status' => false,
+                    'data' => null,
+                    'msg' => 'something went wrong while updating EN, please try again!'
+                ];
+            }
+
+            if ($request->type_en = 'normal') {
+                $this->updateNormalProductDetails($id, $request);
+
+            }
+            if ($request->type_en = 'withPrice') {
+                $this->updateProductOptionValues($id, $request);
+            }
+
+            if ($request->type_ar && $request->name_ar && $request->description_ar && $request->notes_ar) {
+                $product_ar = $product->translate(2);
+                $product_ar->type = $request->type_ar;
+                $product_ar->name = $request->name_ar;
+                $product_ar->description = $request->description_ar;
+                $product_ar->notes = $request->notes_ar;
+
+                // check save status
+                if (!$product_ar->save()) {
+                    return [
+                        'status' => false,
+                        'data' => null,
+                        'msg' => 'something went wrong while updating AR, please try again!'
+                    ];
+                }
+            }
+
+
+            // check save success
+            return [
+                'status' => true,
+                'data' => [
+                    'product' => $product
+                ],
+                'msg' => 'Data updated successfully done',
+            ];
+        }
+
     }
 
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
+    public function updateNormalProductDetails($id, Request $request)
+    {
+        // validation products
+        $validation_normalProducts = [
+            'price' => 'required',
+            'serial' => 'required',
+            'modelNumber' => 'required',
+            'barcode' => 'required',
+            'discount' => 'required',
+            'stock' => 'required',
+            'discount_type' => 'required',
+        ];
+
+        $validation = validator($request->all(), $validation_normalProducts);
+
+        // if validation failed, return false response
+        if ($validation->fails()) {
+            return [
+                'status' => false,
+                'data' => $validation->getMessageBag(),
+                'msg' => 'validation error'
+            ];
+        }
+        $normal_product_details = NormalProductDetails::where('product_id', $id)->first();
+
+        if (!$normal_product_details) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product in this id! '
+            ];
+        }
+
+
+        $normal_product_details->price = $request->price;
+        $normal_product_details->serial = $request->serial;
+        $normal_product_details->model_number = $request->modelNumber;
+        $normal_product_details->barcode = $request->barcode;
+        $normal_product_details->discount = $request->discount;
+        $normal_product_details->stock = $request->stock;
+        $normal_product_details->discount_type = $request->discount_type;
+
+        if ($normal_product_details->save()) {
+            // check save success
+            return [
+                'status' => true,
+                'data' => [
+                    'normalProductDetails' => $normal_product_details
+                ],
+                'msg' => 'Data updated successfully done',
+            ];
+        }
+
+    }
+
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
+    public function updateProductOptionValues($id, Request $request)
+    {
+
+        // validation products
+        $validation_productOptionValues = [
+            'price' => 'required',
+            'serial' => 'required',
+            'modelNumber' => 'required',
+            'barcode' => 'required',
+            'discount' => 'required',
+            'stock' => 'required',
+        ];
+
+        $validation = validator($request->all(), $validation_productOptionValues);
+
+        // if validation failed, return false response
+        if ($validation->fails()) {
+            return [
+                'status' => false,
+                'data' => $validation->getMessageBag(),
+                'msg' => 'validation error'
+            ];
+        }
+        $product_option_values = ProductOptionValues::where('product_id', $id)->first();
+
+
+        if (!$product_option_values) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product in this id! '
+            ];
+        }
+
+
+        $product_option_values->price = $request->price;
+        $product_option_values->serial = $request->serial;
+        $product_option_values->model_number = $request->modelNumber;
+        $product_option_values->barcode = $request->barcode;
+        $product_option_values->discount = $request->discount;
+        $product_option_values->stock = $request->stock;
+
+        if ($product_option_values->save()) {
+
+            $product_option_values_id = ProductOptionValues::where('product_id', $id)->first()->id;
+
+            $product_option_values_details = ProductOptionValuesDetails::where('product_option_value_id', $product_option_values_id)->first();
+
+            $option_value_id = OptionValues::first()->id;
+
+            $product_option_values_details->option_value_id = $option_value_id;
+
+            // check save success
+            return [
+                'status' => true,
+                'data' => [
+                    'normalProductDetails' => $product_option_values
+                ],
+                'msg' => 'Data updated successfully done',
+            ];
+        }
+
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
     public function deleteProduct($id)
     {
         //search  for product
@@ -433,8 +571,19 @@ class ProductsController extends Controller
             ];
         }
 
+        $productOptionValue = ProductOptionValues::where('product_id', $id)->first();
+
         //delete productTrans
         $product->productTrans()->delete();
+
+        //delete productOptionValue
+        $product->productOptionValue()->delete();
+
+        //delete normalProductDetails
+        $product->normalProductDetails()->delete();
+
+        //delete productOptionValueDetails
+        $productOptionValue->productOptionValueDetails()->delete();
 
         //delete product
         $product->delete();
@@ -446,5 +595,4 @@ class ProductsController extends Controller
             'msg' => 'Data is deleted successfully!'
         ];
     }
-
 }

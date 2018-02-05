@@ -23,6 +23,11 @@ class NormalProductDetails extends Model
     protected $dates = ['deleted_at'];
 
     /**
+     * @var array
+     */
+    protected $fillable = ['price', 'serial', 'discount_type', 'model_number', 'barcode', 'discount', 'stock'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product()
