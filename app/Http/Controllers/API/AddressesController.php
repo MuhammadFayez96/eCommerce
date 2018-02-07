@@ -384,8 +384,16 @@ class AddressesController extends Controller
         // instantiate App\Model\City - master
         $city = new City;
 
-        $country_id = Country::first()->id;
-        $city->country_id = $country_id;
+                    /******check***********************************************/
+
+        $countries = Country::with('city')->get();
+
+        foreach ($countries as $country) {
+            $city->country_id = $country->first()->id;
+        }
+
+                    /***********************************************************/
+
 
         // check saving success
         if (!$city->save()) {
@@ -395,6 +403,7 @@ class AddressesController extends Controller
                 'msg' => 'something went wrong, please try again!'
             ];
         }
+
 
         // store en version
         $city_en = $city->cityTrans()->create([

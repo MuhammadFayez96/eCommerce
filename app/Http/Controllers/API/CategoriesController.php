@@ -119,10 +119,17 @@ class CategoriesController extends Controller
         // instantiate App\Model\Category - master
         $category = new Category;
 
-        $id = Menu::first()->id;
 
-        $category->menu_id = $id;
+        /********************************************************************/
+        $menus=Menu::with('categories')->get();
+
+        foreach ($menus as $menu){
+            $category->menu_id=$menu->first()->id;
+        }
+
         $category->parent_id = 0;
+        /********************************************************************/
+
 
         // check saving success
         if (!$category->save()) {

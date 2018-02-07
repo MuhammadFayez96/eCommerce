@@ -37,4 +37,12 @@ class Bought extends Model
     {
         return $this->hasMany('App\Models\BoughtDetails', 'bought_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function details()
+    {
+        return $this->boughtDetails();
+    }
 }

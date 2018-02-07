@@ -125,8 +125,12 @@ class ProductsController extends Controller
         // instantiate App\Model\Role - master
         $product = new Product;
 
-        $category_id = Category::first()->id;
-        $product->category_id = $category_id;
+        /****************************************************************************/
+        $categories = Category::with('')->get();
+        foreach ($categories as $category) {
+            $product->category_id = $category->first()->id;
+        }
+        /********************************************************************************/
 
         // check saving success
         if (!$product->save()) {
@@ -232,7 +236,9 @@ class ProductsController extends Controller
 
         $normalProduct = new NormalProductDetails;
 
+        /*************************************************/
         $product_id = Product::first()->id;
+        /*************************************************/
 
         $normalProduct->product_id = $product_id;
         $normalProduct->price = $request->price;
@@ -292,7 +298,10 @@ class ProductsController extends Controller
 
         $productOptionValues = new ProductOptionValues;
 
+        /******************************************/
         $product_id = Product::first()->id;
+        /*****************************************/
+
         $productOptionValues->product_id = $product_id;
         $productOptionValues->price = $request->price;
         $productOptionValues->serial = $request->serial;
@@ -312,8 +321,10 @@ class ProductsController extends Controller
 
         $productOptionValuesDetails = new ProductOptionValuesDetails;
 
+        /***********************************************************/
         $productOptionValuesDetails->option_value_id = 1;
         $productOptionValuesDetails->product_option_value_id = 1;
+        /***********************************************************/
 
         if ($productOptionValuesDetails->save()) {
             return [

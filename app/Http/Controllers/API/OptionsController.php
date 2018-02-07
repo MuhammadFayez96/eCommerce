@@ -148,8 +148,13 @@ class OptionsController extends Controller
 
         $optionValues = new OptionValues;
 
-        $id = Option::first()->id;
-        $optionValues->option_id = $id;
+        /***************************************************************/
+        $Options = Option::with('optionValues')->get();
+
+        foreach ($Options as $Option) {
+            $optionValues->option_id = $Option->first()->id;
+        }
+        /****************************************************************/
 
         // check saving success
         if (!$option->save()) {
