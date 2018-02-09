@@ -5,7 +5,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-right image">
-                <img src="{{asset('storage/uploads/images/avatars/default.jpg') }}" class="img-circle" alt="User Image">
+                <img src="{{asset('storage/uploads/images/avatars/admin-avatar-default.png') }}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-right info">
                 <a href="#"><i class="fa fa-circle text-success"></i> Muhammad Fayez</a>
