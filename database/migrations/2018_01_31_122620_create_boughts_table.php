@@ -25,6 +25,7 @@ class CreateBoughtsTable extends Migration
             $table->double('remain');
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

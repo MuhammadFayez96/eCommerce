@@ -26,6 +26,7 @@ class CreateProductOptionValuesTable extends Migration
             $table->double('stock');
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

@@ -24,6 +24,7 @@ class CreateOptionValuesTranslationTable extends Migration
             $table->string('value');
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

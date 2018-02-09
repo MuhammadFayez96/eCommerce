@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->text('notes')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

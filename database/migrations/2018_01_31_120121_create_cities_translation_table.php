@@ -23,6 +23,7 @@ class CreateCitiesTranslationTable extends Migration
 
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

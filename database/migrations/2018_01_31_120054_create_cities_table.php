@@ -19,6 +19,7 @@ class CreateCitiesTable extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

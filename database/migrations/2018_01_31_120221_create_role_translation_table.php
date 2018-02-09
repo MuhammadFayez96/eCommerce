@@ -26,6 +26,7 @@ class CreateRoleTranslationTable extends Migration
             $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

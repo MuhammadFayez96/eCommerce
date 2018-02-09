@@ -18,6 +18,7 @@ class CreateCountriesTable extends Migration
             $table->string('country_code');
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

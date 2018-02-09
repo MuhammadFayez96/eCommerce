@@ -15,7 +15,7 @@ class CreateMenusTranslationTable extends Migration
     {
         Schema::create('menus_translation', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('menu_id')->unsigned();
+            $table->integer('menu_id')->index()->unsigned();
             $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
 
             $table->integer('lang_id')->unsigned();
@@ -23,8 +23,12 @@ class CreateMenusTranslationTable extends Migration
 
             $table->text('description')->nullable();
             $table->text('notes')->nullable();
+
+
             $table->softDeletes();
             $table->timestamps();
+
+            $table->engine = 'InnoDB';
         });
     }
 

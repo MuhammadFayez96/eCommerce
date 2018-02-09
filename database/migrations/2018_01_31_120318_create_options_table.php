@@ -17,6 +17,7 @@ class CreateOptionsTable extends Migration
             $table->increments('id');
             $table->softDeletes();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

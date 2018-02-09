@@ -17,8 +17,11 @@ class CreateLanguagesTable extends Migration
             $table->increments('id');
             $table->string('language');
             $table->string('lang_code');
+
             $table->softDeletes();
             $table->timestamps();
+
+            $table->engine = 'InnoDB';
         });
     }
 
