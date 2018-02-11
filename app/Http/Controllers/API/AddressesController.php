@@ -114,12 +114,16 @@ class AddressesController extends Controller
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
         // instantiate App\Model\Country - master
-        $country = new Country;
+//        $country = new Country;
+//
+//        $country->country_code = $request->country_code;
 
-        $country->country_code = $request->country_code;
+        $country = Country::forceCreate([
+            'country_code' => $request->country_code,
+        ]);
 
         // check saving success
-        if (!$country->save()) {
+        if (!$country) {
             return [
                 'status' => false,
                 'data' => null,
