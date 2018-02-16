@@ -117,9 +117,10 @@ class RolesController extends Controller
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
         // instantiate App\Model\Role - master
-        $role = new Role;
+        $role = Role::forceCreate([
+            'role' => $request->role
+        ]);
 
-        $role->role = $request->role;
 
         // check saving success
         if (!$role->save()) {
@@ -130,14 +131,16 @@ class RolesController extends Controller
             ];
         }
 
-        // store en version
-        $role_en = $role->roleTrans()->create([
-            'displayName' => $request->role_displayName_en,
-            'description' => $request->role_description_en,
-            'notes' => $request->role_notes_en,
-            'lang_id' => $en_id
-        ]);
-
+        $role_en = null;
+        if ($request->role_displayName_en && $request->role_description_en && $request->role_notes_en) {
+            // store en version
+            $role_en = $role->roleTrans()->create([
+                'displayName' => $request->role_displayName_en,
+                'description' => $request->role_description_en,
+                'notes' => $request->role_notes_en,
+                'lang_id' => $en_id
+            ]);
+        }
         // check saving status
         if (!$role_en) {
             return [
@@ -147,6 +150,7 @@ class RolesController extends Controller
             ];
         }
 
+        $role_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
         if ($request->role_displayName_ar && $request->role_description_ar && $request->role_notes_ar) {

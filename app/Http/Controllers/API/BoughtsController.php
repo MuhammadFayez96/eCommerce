@@ -118,33 +118,55 @@ class BoughtsController extends Controller
             ];
         }
 
-        $bought = new Bought;
 
         /*******************************************************/
-        $user_id = User::first()->id;
+        $user_id = $request->user_id;
+        $user = User::find($user_id);
 
-        $bought->user_id = $user_id;
-        /*******************************************************/
+        if (!$user) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no user with such id!'
+            ];
+        }
 
-        $bought->total_amount = $request->total_amount;
-        $bought->total_price = $request->total_price;
-        $bought->type = $request->type;
-        $bought->paid = $request->paid;
-        $bought->remain = $request->remain;
+        $bought = Bought::forceCreate([
+            'user_id' => $user_id,
+            'total_amount' => $request->total_amount,
+            'total_price' => $request->total_price,
+            'type' => $request->type,
+            'paid' => $request->paid,
+            'remain' => $request->remain,
 
+        ]);;
 
-        /***********************************************************/
-        $product_id = Product::first()->id;
+        $product_id = $request->product_id;
+        $product = Product::find($product_id);
 
-        $product_option_value_id = ProductOptionValues::where('product_id', $product_id)->first()->id;
+        if (!$product) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product with such id!'
+            ];
+        }
 
-        $bought_id = Bought::first()->id;
-        /***********************************************************/
+        $product_option_value_id = $request->product_option_value_id;
+        $product_option_value = ProductOptionValues::find($product_option_value_id);
+
+        if (!$product_option_value) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product option value with such id!'
+            ];
+        }
+
 
         // check save status
         if ($bought->save()) {
-            $bought_details = $bought->boughtDetails()->forceCreate([
-                'bought_id' => $bought_id,
+            $bought_details = $bought->boughtDetails()->Create([
                 'amount' => $request->amount,
                 'cost' => $request->cost,
                 'product_type' => $request->product_type,

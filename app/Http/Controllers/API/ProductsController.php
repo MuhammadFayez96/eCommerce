@@ -123,14 +123,22 @@ class ProductsController extends Controller
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
         // instantiate App\Model\Role - master
-        $product = new Product;
 
-        /****************************************************************************/
-        $categories = Category::with('')->get();
-        foreach ($categories as $category) {
-            $product->category_id = $category->first()->id;
+        $category_id = $request->category_id;
+        $category = Category::find($category_id);
+
+        if (!$category) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no category with such id!'
+            ];
         }
-        /********************************************************************************/
+
+
+        $product = Product::forceCreate([
+            'category_id' => $category_id,
+        ]);
 
         // check saving success
         if (!$product->save()) {
@@ -141,15 +149,17 @@ class ProductsController extends Controller
             ];
         }
 
-        // store en version
-        $product_en = $product->productTrans()->create([
-            'type' => $request->type_en,
-            'name' => $request->name_en,
-            'description' => $request->description_en,
-            'notes' => $request->notes_en,
-            'lang_id' => $en_id
-        ]);
-
+        $product_en = null;
+        if ($request->type_en && $request->name_en && $request->description_en && $request->notes_en) {
+            // store en version
+            $product_en = $product->productTrans()->create([
+                'type' => $request->type_en,
+                'name' => $request->name_en,
+                'description' => $request->description_en,
+                'notes' => $request->notes_en,
+                'lang_id' => $en_id
+            ]);
+        }
         // check saving status
         if (!$product_en) {
             return [
@@ -159,6 +169,7 @@ class ProductsController extends Controller
             ];
         }
 
+        $product_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
         if ($request->type_ar && $request->name_ar && $request->description_ar && $request->notes_ar) {
@@ -234,21 +245,30 @@ class ProductsController extends Controller
             ];
         }
 
-        $normalProduct = new NormalProductDetails;
 
-        /*************************************************/
-        $product_id = Product::first()->id;
-        /*************************************************/
+        $product_id = $request->product_id;
+        $product = Product::find($product_id);
 
-        $normalProduct->product_id = $product_id;
-        $normalProduct->price = $request->price;
-        $normalProduct->serial = $request->serial;
-        $normalProduct->model_number = $request->modelNumber;
-        $normalProduct->barcode = $request->barcode;
-        $normalProduct->discount = $request->discount;
-        $normalProduct->stock = $request->stock;
-        $normalProduct->discount_type = $request->discount_type;
+        if (!$product) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product with such id!'
+            ];
+        }
 
+        $normalProduct = NormalProductDetails::forceCreate([
+            'product_id' => $product_id,
+            'price' => $request->price,
+            'serial' => $request->serial,
+            'model_number' => $request->modelNumber,
+            'barcode' => $request->barcode,
+            'discount' => $request->discount,
+            'stock' => $request->stock,
+            'discount_type' => $request->discount_type,
+        ]);
+
+        //check save status
         if (!$normalProduct->save()) {
             return [
                 'status' => false,
@@ -257,6 +277,7 @@ class ProductsController extends Controller
             ];
         }
 
+        //check save status
         return [
             'status' => true,
             'data' => [
@@ -273,7 +294,6 @@ class ProductsController extends Controller
      */
     public function createNewProductOptionValues(Request $request)
     {
-//        dd($request->all());
         // validation products
         $validation_productOptionValues = [
             'price' => 'required',
@@ -296,20 +316,29 @@ class ProductsController extends Controller
         }
 
 
-        $productOptionValues = new ProductOptionValues;
+        $product_id = $request->product_id;
+        $product = Product::find($product_id);
 
-        /******************************************/
-        $product_id = Product::first()->id;
-        /*****************************************/
+        if (!$product) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product with such id!'
+            ];
+        }
 
-        $productOptionValues->product_id = $product_id;
-        $productOptionValues->price = $request->price;
-        $productOptionValues->serial = $request->serial;
-        $productOptionValues->model_number = $request->modelNumber;
-        $productOptionValues->barcode = $request->barcode;
-        $productOptionValues->discount = $request->discount;
-        $productOptionValues->stock = $request->stock;
+        $productOptionValues = ProductOptionValues::forceCreate([
+            'product_id' => $product_id,
+            'price' => $request->price,
+            'serial' => $request->serial,
+            'model_number' => $request->modelNumber,
+            'barcode' => $request->barcode,
+            'discount' => $request->discount,
+            'stock' => $request->stock,
+            'discount_type' => $request->discount_type,
+        ]);;
 
+        //check save status
         if (!$productOptionValues->save()) {
             return [
                 'status' => false,
@@ -319,12 +348,45 @@ class ProductsController extends Controller
         }
 
 
-        $productOptionValuesDetails = new ProductOptionValuesDetails;
+        $option_value_id = $request->option_value_id;
+        $option_value = OptionValues::find($option_value_id);
 
-        /***********************************************************/
-        $productOptionValuesDetails->option_value_id = 1;
-        $productOptionValuesDetails->product_option_value_id = 1;
-        /***********************************************************/
+        //check save status
+        if (!$option_value) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no option value with such id!'
+            ];
+        }
+
+
+        $product_option_value_id = $request->product_optoin_value_id;
+        $product_option_value = ProductOptionValues::find($product_option_value_id);
+
+        //check save status
+        if (!$product_option_value) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product option value with such id!'
+            ];
+        }
+
+
+        $productOptionValuesDetails = ProductOptionValuesDetails::forceCreate([
+            'option_value_id' => $option_value_id,
+            'product_option_value_id' => $product_option_value_id
+        ]);
+
+        //check save status
+        if (!$productOptionValuesDetails->save()) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no product with this id!'
+            ];
+        }
 
         if ($productOptionValuesDetails->save()) {
             return [
@@ -334,7 +396,6 @@ class ProductsController extends Controller
                 ],
                 'msg' => 'Data inserted successfully done',
             ];
-
         }
 
     }

@@ -125,12 +125,15 @@ class MenusController extends Controller
             ];
         }
 
-        // store en version
-        $menu_en = $menu->menuTrans()->create([
-            'description' => $request->description_en,
-            'notes' => $request->notes_en,
-            'lang_id' => $en_id,
-        ]);
+        $menu_en = null;
+        if ($request->description_en && $request->notes_en) {
+            // store en version
+            $menu_en = $menu->menuTrans()->create([
+                'description' => $request->description_en,
+                'notes' => $request->notes_en,
+                'lang_id' => $en_id,
+            ]);
+        }
 
         // check saving status
         if (!$menu_en) {
@@ -141,6 +144,7 @@ class MenusController extends Controller
             ];
         }
 
+        $menu_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
         if ($request->description_ar && $request->notes_ar) {
@@ -274,7 +278,7 @@ class MenusController extends Controller
 
         $category_id = Category::where('menu_id', $id)->first()->id;
 
-        $product=Product::where('category_id',$category_id)->first();
+        $product = Product::where('category_id', $category_id)->first();
 
         //delete data from optionTrans
         $menu->menuTrans()->delete();

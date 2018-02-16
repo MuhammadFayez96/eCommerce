@@ -302,6 +302,10 @@ class AddressesController extends Controller
     // .... cities methods.....//
 
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function getCity($id)
     {
         //find city by id
@@ -329,6 +333,9 @@ class AddressesController extends Controller
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getAllCities()
     {
         //find all cities from DB
@@ -362,6 +369,10 @@ class AddressesController extends Controller
         ];
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function createNewCity(Request $request)
     {
         // validation cities
@@ -390,7 +401,6 @@ class AddressesController extends Controller
         $country = Country::find($country_id);
 
         if (!$country) {
-
             return [
                 'status' => false,
                 'data' => null,
@@ -457,6 +467,11 @@ class AddressesController extends Controller
         ];
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
     public function updateCity($id, Request $request)
     {
         // validation cities
@@ -529,6 +544,10 @@ class AddressesController extends Controller
 
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function deleteCity($id)
     {
         //find city by id

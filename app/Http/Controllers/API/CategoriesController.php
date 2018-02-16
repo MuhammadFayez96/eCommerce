@@ -117,18 +117,22 @@ class CategoriesController extends Controller
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
         // instantiate App\Model\Category - master
-        $category = new Category;
 
 
-        /********************************************************************/
-        $menus=Menu::with('categories')->get();
-
-        foreach ($menus as $menu){
-            $category->menu_id=$menu->first()->id;
+        $menu_id = $request->menu_id;
+        $menu = Menu::find($menu_id);
+        if (!$menu) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no menu with such id!'
+            ];
         }
 
-        $category->parent_id = 0;
-        /********************************************************************/
+        $category = Category::forceCreate([
+            'menu_id' => $menu_id,
+            'parent_id' => $request->parent_id
+        ]);
 
 
         // check saving success
@@ -140,12 +144,15 @@ class CategoriesController extends Controller
             ];
         }
 
-        // store en version
-        $category_en = $category->categoryTrans()->create([
-            'description' => $request->description_en,
-            'notes' => $request->notes_en,
-            'lang_id' => $en_id,
-        ]);
+        $category_en = null;
+        if ($request->description_en && $request->notes_en) {
+            // store en version
+            $category_en = $category->categoryTrans()->create([
+                'description' => $request->description_en,
+                'notes' => $request->notes_en,
+                'lang_id' => $en_id,
+            ]);
+        }
 
         // check saving status
         if (!$category_en) {
@@ -156,6 +163,7 @@ class CategoriesController extends Controller
             ];
         }
 
+        $category_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
         if ($request->description_ar && $request->notes_ar) {
