@@ -18,6 +18,8 @@ class CreateCitiesTranslationTable extends Migration
             $table->integer('city_id')->unsigned();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
 
+            $table->string('city')->nullable();
+
             $table->integer('lang_id')->unsigned();
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade');
 

@@ -25,7 +25,7 @@ class CityTranslation extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'lang_id'];
+    protected $fillable = ['city', 'lang_id'];
 
 
     /**

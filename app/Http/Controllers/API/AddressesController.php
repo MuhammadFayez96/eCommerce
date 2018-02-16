@@ -366,7 +366,7 @@ class AddressesController extends Controller
     {
         // validation cities
         $validation_cities = [
-            'city_name_en' => 'required',
+            'city_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_cities);
@@ -385,35 +385,32 @@ class AddressesController extends Controller
         // store the city in en
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
-        // instantiate App\Model\City - master
-        $city = new City;
+        // get country
+        $country_id = $request->country_id;
+        $country = Country::find($country_id);
 
-                    /******check***********************************************/
+        if (!$country) {
 
-        $countries = Country::with('city')->get();
-
-        foreach ($countries as $country) {
-            $city->country_id = $country->first()->id;
-        }
-
-                    /***********************************************************/
-
-
-        // check saving success
-        if (!$city->save()) {
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'something went wrong, please try again!'
+                'msg' => 'There is no country with such id!'
             ];
         }
 
-
-        // store en version
-        $city_en = $city->cityTrans()->create([
-            'name' => $request->city_name_en,
-            'lang_id' => $en_id
+        // save master city
+        $city = City::forceCreate([
+            'country_id' => $country_id,
         ]);
+
+        $city_en = null;
+        if ($request->city_en) {
+
+            $city_en = $city->cityTrans()->create([
+                'city' => $request->city_en,
+                'lang_id' => $en_id
+            ]);
+        }
 
         // check saving status
         if (!$city_en) {
@@ -426,6 +423,7 @@ class AddressesController extends Controller
 
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
+        $city_ar = null;
         if ($request->city_name_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
@@ -450,7 +448,10 @@ class AddressesController extends Controller
             'status' => true,
             'data' => [
                 'city' => $city,
-                'cityTrans' => $city->cityTrans()->getResults()
+                'cityTrans' => [
+                    'en' => $city_en,
+                    'ar' => $city_ar
+                ],
             ],
             'msg' => 'data inserted successfully done',
         ];
