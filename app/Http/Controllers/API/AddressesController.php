@@ -111,17 +111,14 @@ class AddressesController extends Controller
         // choose one language to be the default one, let's make EN is the default
         // store master country
         // store the country in en
-        $en_id = Language::where('lang_code', 'en')->first()->id;
 
-        // instantiate App\Model\Country - master
-//        $country = new Country;
-//
-//        $country->country_code = $request->country_code;
+        $en_id = Language::where('lang_code', 'en')->first()->id;
 
         $country = Country::forceCreate([
             'country_code' => $request->country_code,
         ]);
 
+//        dd($country);
         // check saving success
         if (!$country) {
             return [
@@ -278,6 +275,9 @@ class AddressesController extends Controller
 
         $city = City::where('country_id', $id)->first();
 
+        //delete data from country
+        $country->delete();
+
         //delete country
         $country->countyTrans()->delete();
 
@@ -287,8 +287,6 @@ class AddressesController extends Controller
         // delete data from cityTrans
         $city->cityTrans()->delete();
 
-        //delete data from country
-        $country->delete();
 
         //check success status
         return [
@@ -378,6 +376,8 @@ class AddressesController extends Controller
         // validation cities
         $validation_cities = [
             'city_en' => 'required',
+            'country_id' => 'required',
+
         ];
 
         $validation = validator($request->all(), $validation_cities);

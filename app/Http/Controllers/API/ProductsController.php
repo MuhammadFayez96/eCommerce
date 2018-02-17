@@ -104,6 +104,7 @@ class ProductsController extends Controller
             'name_en' => 'required',
             'description_en' => 'required',
             'notes_en' => 'required',
+            'category_id' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_products);
@@ -232,6 +233,7 @@ class ProductsController extends Controller
             'discount' => 'required',
             'stock' => 'required',
             'discount_type' => 'required',
+            'product_id' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_normalProducts);
@@ -302,6 +304,9 @@ class ProductsController extends Controller
             'barcode' => 'required',
             'discount' => 'required',
             'stock' => 'required',
+            'product_id' => 'required',
+            'option_value_id' => 'required',
+            'product_optoin_value_id' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_productOptionValues);
@@ -335,7 +340,6 @@ class ProductsController extends Controller
             'barcode' => $request->barcode,
             'discount' => $request->discount,
             'stock' => $request->stock,
-            'discount_type' => $request->discount_type,
         ]);;
 
         //check save status

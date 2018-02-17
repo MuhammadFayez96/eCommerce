@@ -25,7 +25,7 @@ class CountryTranslation extends Model
     /**
      * @var array
      */
-    protected $fillable = ['country', 'lang_id'];
+    protected $fillable = ['country','country_code', 'lang_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

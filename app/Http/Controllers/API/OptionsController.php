@@ -125,6 +125,7 @@ class OptionsController extends Controller
         $validation_options = [
             'option_name_en' => 'required',
             'option_value_en' => 'required',
+            'option_id' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_options);

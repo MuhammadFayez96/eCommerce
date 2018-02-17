@@ -98,6 +98,8 @@ class CategoriesController extends Controller
         $validation_categories = [
             'description_en' => 'required',
             'notes_en' => 'required',
+            'menu_id' => 'required',
+            'parent_id' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_categories);

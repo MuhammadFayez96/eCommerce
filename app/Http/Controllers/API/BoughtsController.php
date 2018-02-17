@@ -105,6 +105,9 @@ class BoughtsController extends Controller
             'amount' => 'required',
             'cost' => 'required',
             'product_type' => 'required',
+            'user_id' => 'required',
+            'product_id' => 'required',
+            'product_option_value_id' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_boughts);
@@ -118,8 +121,6 @@ class BoughtsController extends Controller
             ];
         }
 
-
-        /*******************************************************/
         $user_id = $request->user_id;
         $user = User::find($user_id);
 
