@@ -104,3 +104,12 @@ Route::group(['prefix' => 'boughts/', 'namespace' => 'API'], function () {
     Route::delete('delete/{id}', 'BoughtsController@deleteBought')->name('boughts.deleteBought');
 });
 
+// bought routes
+Route::group(['prefix' => 'users/', 'namespace' => 'API'], function () {
+
+    Route::get('', 'UsersController@getAllUsers')->name('users.getAllUsers');
+    Route::get('{id}', 'UsersController@getUser')->name('users.getUser');
+    Route::post('create', 'UsersController@createNewUser')->name('users.createNewUser');
+    Route::patch('update/{id}', 'UsersController@updateUser')->name('users.updateUser');
+    Route::delete('delete/{id}', 'UsersController@deleteUser')->name('users.deleteUser');
+});

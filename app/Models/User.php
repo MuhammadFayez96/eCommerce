@@ -47,4 +47,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Bought', 'user_id', 'id');
     }
 
+    public function details()
+    {
+        return $this->bought();
+    }
+
 }

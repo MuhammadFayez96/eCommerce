@@ -7,7 +7,6 @@ use App\Models\BoughtDetails;
 use App\Models\Product;
 use App\Models\ProductOptionValues;
 use App\Models\User;
-use DeepCopy\f001\B;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -139,8 +138,7 @@ class BoughtsController extends Controller
             'type' => $request->type,
             'paid' => $request->paid,
             'remain' => $request->remain,
-
-        ]);;
+        ]);
 
         $product_id = $request->product_id;
         $product = Product::find($product_id);

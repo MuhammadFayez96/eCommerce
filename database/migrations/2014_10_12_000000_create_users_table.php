@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->integer('postal-code')->nullable();
             $table->text('notes')->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
             $table->engine = 'InnoDB';
         });
