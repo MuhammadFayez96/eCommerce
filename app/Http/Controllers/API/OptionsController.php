@@ -14,7 +14,6 @@ use App\Http\Controllers\Controller;
  */
 class OptionsController extends Controller
 {
-
     /**
      * @param $id
      * @return array
@@ -35,9 +34,11 @@ class OptionsController extends Controller
 
         $optionValue = OptionValues::where('option_id', $id)->first();
 
+        //find option details
         $option_translated = $option->translate();
         $option->option_translated = $option_translated;
 
+        //find optionValue details
         $optionValue_translated = $optionValue->translate();
         $optionValue->optionValue_translated = $optionValue_translated;
 
@@ -80,7 +81,7 @@ class OptionsController extends Controller
             $option->option_translated = $option_translated;
         }
 
-        //get all option in db
+        //get all optionValues in db
         $optionValues = OptionValues::all();
 
         //check if no options
@@ -174,51 +175,6 @@ class OptionsController extends Controller
             ];
         }
 
-
-        $option_id = $request->option_id;
-        $options = Option::find($option_id);
-
-        if (!$options) {
-            return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'There is no option with such id!'
-            ];
-        }
-
-        $optionValues = OptionValues::forceCreate([
-            'option_id' => $option_id,
-        ]);
-
-
-        // check saving success
-        if (!$optionValues->save()) {
-            return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'something went wrong, please try again!'
-            ];
-        }
-
-
-        $optionValues_en = null;
-        if ($request->option_value_en) {
-            // store en version
-            $optionValues_en = $optionValues->optionValuesTrans()->create([
-                'value' => $request->option_value_en,
-                'lang_id' => $en_id,
-            ]);
-        }
-
-        // check saving status
-        if (!$optionValues_en) {
-            return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'something went wrong while saving EN, please try again!'
-            ];
-        }
-
         $option_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
@@ -241,36 +197,86 @@ class OptionsController extends Controller
             }
         }
 
-        $optionValues_ar = null;
-        if ($request->option_value_ar) {
-            $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
-            $optionValues_ar = $optionValues->optionValuesTrans()->create([
-                'Value' => $request->option_value_ar,
-                'lang_id' => $ar_id,
-            ]);
+        if ($option->save()) {
+            $option_id = $option->id;
 
-            // check save status
-            if (!$optionValues_ar) {
+            //find option by id
+            $options = Option::find($option_id);
+
+            //check if no option
+            if (!$options) {
                 return [
                     'status' => false,
                     'data' => null,
-                    'msg' => 'something went wrong while saving AR, please try again!'
+                    'msg' => 'There is no option with such id!'
                 ];
             }
-        }
 
-        // check saving success
-        return [
-            'status' => true,
-            'data' => [
-                'option' => $option,
-                'optionTrans' => $option->optionTrans()->getResults(),
-                'optionValues' => $optionValues,
-                'optionValuesTrans' => $optionValues->optionValuesTrans()->getResults()
-            ],
-            'msg' => 'Data inserted successfully done',
-        ];
+            $optionValues = OptionValues::forceCreate([
+                'option_id' => $option_id,
+            ]);
+
+            // check saving success
+            if (!$optionValues->save()) {
+                return [
+                    'status' => false,
+                    'data' => null,
+                    'msg' => 'something went wrong, please try again!'
+                ];
+            }
+
+
+            $optionValues_en = null;
+            if ($request->option_value_en) {
+                // store en version
+                $optionValues_en = $optionValues->optionValuesTrans()->create([
+                    'value' => $request->option_value_en,
+                    'lang_id' => $en_id,
+                ]);
+            }
+
+            // check saving status
+            if (!$optionValues_en) {
+                return [
+                    'status' => false,
+                    'data' => null,
+                    'msg' => 'something went wrong while saving EN, please try again!'
+                ];
+            }
+
+
+            $optionValues_ar = null;
+            if ($request->option_value_ar) {
+                $ar_id = Language::where('lang_code', 'ar')->first()->id;
+
+                $optionValues_ar = $optionValues->optionValuesTrans()->create([
+                    'Value' => $request->option_value_ar,
+                    'lang_id' => $ar_id,
+                ]);
+
+                // check save status
+                if (!$optionValues_ar) {
+                    return [
+                        'status' => false,
+                        'data' => null,
+                        'msg' => 'something went wrong while saving AR, please try again!'
+                    ];
+                }
+            }
+
+            // check saving success
+            return [
+                'status' => true,
+                'data' => [
+                    'option' => $option,
+                    'optionTrans' => $option->optionTrans()->getResults(),
+                    'optionValues' => $optionValues,
+                    'optionValuesTrans' => $optionValues->optionValuesTrans()->getResults()
+                ],
+                'msg' => 'Data inserted successfully done',
+            ];
+        }
     }
 
     /**
@@ -299,6 +305,7 @@ class OptionsController extends Controller
         //search option by id
         $option = Option::find($id);
 
+        //find option value bu option_id
         $optionValue = OptionValues::where('option_id', $id)->first();
 
         //check if no option
@@ -312,7 +319,6 @@ class OptionsController extends Controller
 
         //check save success
         if ($option->save()) {
-
             $option_en = $option->translate(1);
             $option_en->option = $request->option_name_en;
 
@@ -380,12 +386,13 @@ class OptionsController extends Controller
      * @param $id
      * @return array
      */
-    public function deleteOption($id)
+    public
+    function deleteOption($id)
     {
         //search option by id
         $option = Option::find($id);
         $optionValue = OptionValues::where('option_id', $id)->first();
-//        $option_value_id = OptionValues::where('option_id', $id)->first()->id;
+
 
         // check if no option
         if (!$option) {

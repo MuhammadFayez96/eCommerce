@@ -21,6 +21,7 @@ class CreateMenusTranslationTable extends Migration
             $table->integer('lang_id')->unsigned();
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade');
 
+            $table->text('menu')->nullable();
             $table->text('description')->nullable();
             $table->text('notes')->nullable();
 

@@ -49,12 +49,13 @@ class OptionValues extends Model
     }
 
     /**
-     * @param null $lange_id
+     * @param null $lang_id
      * @return Model|null|object|static
      */
     public function translate($lang_id = null)
     {
         $local_lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
+
 
         return $this->optionValuesTrans()->where('lang_id', $lang_id ? $lang_id : $local_lang_id)->first();
     }

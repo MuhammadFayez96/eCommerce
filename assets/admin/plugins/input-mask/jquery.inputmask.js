@@ -69,7 +69,7 @@
 
                 return { "mask": repeatedMask, "repeat": repeat, "greedy": greedy };
             }
-            //test definition => {fn: RegExp/function, cardinality: int, optionality: bool, newBlockMarker: bool, offset: int, casing: null/upper/lower, def: definitionSymbol}
+            //table definition => {fn: RegExp/function, cardinality: int, optionality: bool, newBlockMarker: bool, offset: int, casing: null/upper/lower, def: definitionSymbol}
             function getTestingChain(mask) {
                 if (opts.numericInput) {
                     mask = mask.split('').reverse().join('');
@@ -237,7 +237,7 @@
             var isRTL = false,
                 valueOnFocus = getActiveBuffer().join(''),
                 $el, chromeValueOnInput,
-                skipKeyPressEvent = false, //Safari 5.1.x - modal dialog fires keypress twice workaround
+                skipKeyPressEvent = false, //Safari 5.1.x - modals dialog fires keypress twice workaround
                 skipInputEvent = false, //skip when triggered from within inputmask
                 ignorable = false;
 
@@ -913,7 +913,7 @@
             }
 
             function keydownEvent(e) {
-                //Safari 5.1.x - modal dialog fires keypress twice workaround
+                //Safari 5.1.x - modals dialog fires keypress twice workaround
                 skipKeyPressEvent = false;
                 var input = this, $input = $(input), k = e.keyCode, pos = caret(input);
 
@@ -966,7 +966,7 @@
 
 
             function keypressEvent(e, checkval, k, writeOut, strict, ndx) {
-                //Safari 5.1.x - modal dialog fires keypress twice workaround
+                //Safari 5.1.x - modals dialog fires keypress twice workaround
                 if (k == undefined && skipKeyPressEvent) return false;
                 skipKeyPressEvent = true;
 

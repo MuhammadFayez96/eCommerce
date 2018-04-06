@@ -539,7 +539,7 @@ var wysihtml5 = {
         /*----------------------------------------------------------------------------------------------------------------*/
 
         // Removed use of indexOf because of a bizarre bug in Opera that is thrown in one of the Acid3 tests. I haven't been
-        // able to replicate it outside of the test. The bug is that indexOf returns -1 when called on an Array that
+        // able to replicate it outside of the table. The bug is that indexOf returns -1 when called on an Array that
         // contains just the document as a single element and the value searched for is the document.
         var arrayContains = /*Array.prototype.indexOf ?
             function(arr, val) {
@@ -2269,7 +2269,7 @@ var wysihtml5 = {
                     return this.nativeRange.toString();
                 };
 
-                // Create test range and node for feature detection
+                // Create table range and node for feature detection
 
                 var testTextNode = document.createTextNode("test");
                 getBody(document).appendChild(testTextNode);
@@ -2929,7 +2929,7 @@ var wysihtml5 = {
                         originalSelectionRanges[i] = sel.getRangeAt(i);
                     }
                     
-                    // Create some test elements
+                    // Create some table elements
                     var body = getBody(document);
                     var testEl = body.appendChild( document.createElement("div") );
                     testEl.contentEditable = "false";
@@ -2946,9 +2946,9 @@ var wysihtml5 = {
 
                     // Test whether the native selection is capable of supporting multiple ranges.
                     if (!selectionHasMultipleRanges) {
-                        // Doing the original feature test here in Chrome 36 (and presumably later versions) prints a
+                        // Doing the original feature table here in Chrome 36 (and presumably later versions) prints a
                         // console error of "Discontiguous selection is not supported." that cannot be suppressed. There's
-                        // nothing we can do about this while retaining the feature test so we have to resort to a browser
+                        // nothing we can do about this while retaining the feature table so we have to resort to a browser
                         // sniff. I'm not happy about it. See
                         // https://code.google.com/p/chromium/issues/detail?id=399791
                         var chromeMatch = window.navigator.appVersion.match(/Chrome\/(.*?) /);
@@ -3068,7 +3068,7 @@ var wysihtml5 = {
             return nodes[0];
         }
 
-        // Simple, quick test which only needs to distinguish between a TextRange and a ControlRange
+        // Simple, quick table which only needs to distinguish between a TextRange and a ControlRange
         function isTextRange(range) {
             return !!range && typeof range.text != "undefined";
         }
@@ -6174,7 +6174,7 @@ wysihtml5.dom.parse = function(elementOrHtml_current, config_current) {
         nodeStyles =  oldNode.getAttribute("style"),
         classesLength, s, s_corrected, a, attr, currentClass, styleProp;
 
-    // test for methods
+    // table for methods
     if (definition.methods) {
       for (var m in definition.methods) {
         if (definition.methods.hasOwnProperty(m) && typeCeckMethods[m]) {
@@ -6186,7 +6186,7 @@ wysihtml5.dom.parse = function(elementOrHtml_current, config_current) {
       }
     }
 
-    // test for classes, if one found return true
+    // table for classes, if one found return true
     if (nodeClasses && definition.classes) {
       nodeClasses = nodeClasses.replace(/^\s+/g, '').replace(/\s+$/g, '').split(WHITE_SPACE_REG_EXP);
       classesLength = nodeClasses.length;
@@ -6197,7 +6197,7 @@ wysihtml5.dom.parse = function(elementOrHtml_current, config_current) {
       }
     }
 
-    // test for styles, if one found return true
+    // table for styles, if one found return true
     if (nodeStyles && definition.styles) {
 
       nodeStyles = nodeStyles.split(';');
@@ -6216,7 +6216,7 @@ wysihtml5.dom.parse = function(elementOrHtml_current, config_current) {
       }
     }
 
-    // test for attributes in general against regex match
+    // table for attributes in general against regex match
     if (definition.attrs) {
         for (a in definition.attrs) {
             if (definition.attrs.hasOwnProperty(a)) {
@@ -11968,7 +11968,7 @@ wysihtml5.commands.formatCode = {
   });
 })(wysihtml5);
 ;/**
- * TODO: the following methods still need unit test coverage
+ * TODO: the following methods still need unit table coverage
  */
 wysihtml5.views.View = Base.extend(
   /** @scope wysihtml5.views.View.prototype */ {
@@ -14389,7 +14389,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  return "modal-sm";
+  return "modals-sm";
   }
 
 function program3(depth0,data) {
@@ -14412,14 +14412,14 @@ function program7(depth0,data) {
   return "\n      <span class=\"glyphicon glyphicon-picture\"></span>\n    ";
   }
 
-  buffer += "<li>\n  <div class=\"bootstrap-wysihtml5-insert-image-modal modal fade\" data-wysihtml5-dialog=\"insertImage\">\n    <div class=\"modal-dialog ";
+  buffer += "<li>\n  <div class=\"bootstrap-wysihtml5-insert-image-modals modals fade\" data-wysihtml5-dialog=\"insertImage\">\n    <div class=\"modals-dialog ";
   stack1 = helpers['if'].call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.options)),stack1 == null || stack1 === false ? stack1 : stack1.toolbar)),stack1 == null || stack1 === false ? stack1 : stack1.smallmodals), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <a class=\"close\" data-dismiss=\"modal\">&times;</a>\n          <h3>"
+  buffer += "\">\n      <div class=\"modals-content\">\n        <div class=\"modals-header\">\n          <a class=\"close\" data-dismiss=\"modals\">&times;</a>\n          <h3>"
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.locale)),stack1 == null || stack1 === false ? stack1 : stack1.image)),stack1 == null || stack1 === false ? stack1 : stack1.insert)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h3>\n        </div>\n        <div class=\"modal-body\">\n          <div class=\"form-group\">\n            <input value=\"http://\" class=\"bootstrap-wysihtml5-insert-image-url form-control\" data-wysihtml5-dialog-field=\"src\">\n          </div> \n        </div>\n        <div class=\"modal-footer\">\n          <a class=\"btn btn-default\" data-dismiss=\"modal\" data-wysihtml5-dialog-action=\"cancel\" href=\"#\">"
+    + "</h3>\n        </div>\n        <div class=\"modals-body\">\n          <div class=\"form-group\">\n            <input value=\"http://\" class=\"bootstrap-wysihtml5-insert-image-url form-control\" data-wysihtml5-dialog-field=\"src\">\n          </div> \n        </div>\n        <div class=\"modals-footer\">\n          <a class=\"btn btn-default\" data-dismiss=\"modals\" data-wysihtml5-dialog-action=\"cancel\" href=\"#\">"
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.locale)),stack1 == null || stack1 === false ? stack1 : stack1.image)),stack1 == null || stack1 === false ? stack1 : stack1.cancel)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a>\n          <a class=\"btn btn-primary\" data-dismiss=\"modal\"  data-wysihtml5-dialog-action=\"save\" href=\"#\">"
+    + "</a>\n          <a class=\"btn btn-primary\" data-dismiss=\"modals\"  data-wysihtml5-dialog-action=\"save\" href=\"#\">"
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.locale)),stack1 == null || stack1 === false ? stack1 : stack1.image)),stack1 == null || stack1 === false ? stack1 : stack1.insert)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</a>\n        </div>\n      </div>\n    </div>\n  </div>\n  <a class=\"btn ";
   stack1 = helpers['if'].call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.options)),stack1 == null || stack1 === false ? stack1 : stack1.toolbar)),stack1 == null || stack1 === false ? stack1 : stack1.size), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
@@ -14441,7 +14441,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  return "modal-sm";
+  return "modals-sm";
   }
 
 function program3(depth0,data) {
@@ -14464,16 +14464,16 @@ function program7(depth0,data) {
   return "\n      <span class=\"glyphicon glyphicon-share\"></span>\n    ";
   }
 
-  buffer += "<li>\n  <div class=\"bootstrap-wysihtml5-insert-link-modal modal fade\" data-wysihtml5-dialog=\"createLink\">\n    <div class=\"modal-dialog ";
+  buffer += "<li>\n  <div class=\"bootstrap-wysihtml5-insert-link-modals modals fade\" data-wysihtml5-dialog=\"createLink\">\n    <div class=\"modals-dialog ";
   stack1 = helpers['if'].call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.options)),stack1 == null || stack1 === false ? stack1 : stack1.toolbar)),stack1 == null || stack1 === false ? stack1 : stack1.smallmodals), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <a class=\"close\" data-dismiss=\"modal\">&times;</a>\n          <h3>"
+  buffer += "\">\n      <div class=\"modals-content\">\n        <div class=\"modals-header\">\n          <a class=\"close\" data-dismiss=\"modals\">&times;</a>\n          <h3>"
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.locale)),stack1 == null || stack1 === false ? stack1 : stack1.link)),stack1 == null || stack1 === false ? stack1 : stack1.insert)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h3>\n        </div>\n        <div class=\"modal-body\">\n          <div class=\"form-group\">\n            <input value=\"http://\" class=\"bootstrap-wysihtml5-insert-link-url form-control\" data-wysihtml5-dialog-field=\"href\">\n          </div> \n          <div class=\"checkbox\">\n            <label> \n              <input type=\"checkbox\" class=\"bootstrap-wysihtml5-insert-link-target\" checked>"
+    + "</h3>\n        </div>\n        <div class=\"modals-body\">\n          <div class=\"form-group\">\n            <input value=\"http://\" class=\"bootstrap-wysihtml5-insert-link-url form-control\" data-wysihtml5-dialog-field=\"href\">\n          </div> \n          <div class=\"checkbox\">\n            <label> \n              <input type=\"checkbox\" class=\"bootstrap-wysihtml5-insert-link-target\" checked>"
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.locale)),stack1 == null || stack1 === false ? stack1 : stack1.link)),stack1 == null || stack1 === false ? stack1 : stack1.target)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\n            </label>\n          </div>\n        </div>\n        <div class=\"modal-footer\">\n          <a class=\"btn btn-default\" data-dismiss=\"modal\" data-wysihtml5-dialog-action=\"cancel\" href=\"#\">"
+    + "\n            </label>\n          </div>\n        </div>\n        <div class=\"modals-footer\">\n          <a class=\"btn btn-default\" data-dismiss=\"modals\" data-wysihtml5-dialog-action=\"cancel\" href=\"#\">"
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.locale)),stack1 == null || stack1 === false ? stack1 : stack1.link)),stack1 == null || stack1 === false ? stack1 : stack1.cancel)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a>\n          <a href=\"#\" class=\"btn btn-primary\" data-dismiss=\"modal\" data-wysihtml5-dialog-action=\"save\">"
+    + "</a>\n          <a href=\"#\" class=\"btn btn-primary\" data-dismiss=\"modals\" data-wysihtml5-dialog-action=\"save\">"
     + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.locale)),stack1 == null || stack1 === false ? stack1 : stack1.link)),stack1 == null || stack1 === false ? stack1 : stack1.insert)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</a>\n        </div>\n      </div>\n    </div>\n  </div>\n  <a class=\"btn ";
   stack1 = helpers['if'].call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.options)),stack1 == null || stack1 === false ? stack1 : stack1.toolbar)),stack1 == null || stack1 === false ? stack1 : stack1.size), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});

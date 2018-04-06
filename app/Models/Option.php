@@ -35,6 +35,11 @@ class Option extends Model
         return $this->hasMany('App\Models\OptionValues', 'option_id', 'id');
     }
 
+    public function optionValues_details()
+    {
+        return $this->optionValues()->getResults();
+    }
+
     /**
      * @param null $lang_id
      * @return Model|null|object|static

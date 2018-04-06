@@ -325,16 +325,16 @@
 
       switch(this.template) {
       case 'modal':
-        template = '<div class="bootstrap-timepicker-widget modal hide fade in" data-backdrop="'+ (this.modalBackdrop ? 'true' : 'false') +'">'+
-          '<div class="modal-header">'+
-            '<a href="#" class="close" data-dismiss="modal">×</a>'+
+        template = '<div class="bootstrap-timepicker-widget modals hide fade in" data-backdrop="'+ (this.modalBackdrop ? 'true' : 'false') +'">'+
+          '<div class="modals-header">'+
+            '<a href="#" class="close" data-dismiss="modals">×</a>'+
             '<h3>Pick a Time</h3>'+
           '</div>'+
-          '<div class="modal-content">'+
+          '<div class="modals-content">'+
             templateContent +
           '</div>'+
-          '<div class="modal-footer">'+
-            '<a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>'+
+          '<div class="modals-footer">'+
+            '<a href="#" class="btn btn-primary" data-dismiss="modals">OK</a>'+
           '</div>'+
         '</div>';
         break;

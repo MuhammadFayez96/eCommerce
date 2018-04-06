@@ -31,10 +31,13 @@ class AddressesController extends Controller
                 'msg' => 'There is no country with this id!'
             ];
         }
+
         // get country details
         $country_translated = $country->translate();
+
         $country->country_translated = $country_translated;
 
+        //check save status
         return [
             'status' => true,
             'data' => [
@@ -73,6 +76,7 @@ class AddressesController extends Controller
             $country->country_translated = $country_translated;
         }
 
+        //check save status
         return [
             'status' => true,
             'data' => [
@@ -111,14 +115,12 @@ class AddressesController extends Controller
         // choose one language to be the default one, let's make EN is the default
         // store master country
         // store the country in en
-
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
         $country = Country::forceCreate([
             'country_code' => $request->country_code,
         ]);
 
-//        dd($country);
         // check saving success
         if (!$country) {
             return [
@@ -275,18 +277,17 @@ class AddressesController extends Controller
 
         $city = City::where('country_id', $id)->first();
 
-        //delete data from country
-        $country->delete();
-
-        //delete country
-        $country->countyTrans()->delete();
+        // delete data from cityTrans
+        $city->cityTrans()->delete();
 
         //delete data from city
         $country->city()->delete();
 
-        // delete data from cityTrans
-        $city->cityTrans()->delete();
+        //delete country
+        $country->countyTrans()->delete();
 
+        //delete data from country
+        $country->delete();
 
         //check success status
         return [
@@ -318,6 +319,7 @@ class AddressesController extends Controller
             ];
         }
 
+        //get city details
         $city_translated = $city->translate();
         $city->city_translated = $city_translated;
 
@@ -396,10 +398,13 @@ class AddressesController extends Controller
         // store the city in en
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
-        // get country
+        // get country from request
         $country_id = $request->country_id;
+
+        //find country by id
         $country = Country::find($country_id);
 
+        //check if no country
         if (!$country) {
             return [
                 'status' => false,
@@ -540,8 +545,6 @@ class AddressesController extends Controller
                 'msg' => 'data updated successfully done',
             ];
         }
-
-
     }
 
     /**

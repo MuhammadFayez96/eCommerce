@@ -33,7 +33,7 @@ class CategoriesController extends Controller
             ];
         }
 
-
+        //get category details
         $category_translated = $category->translate();
         $category->category_translated = $category_translated;
 
@@ -96,8 +96,9 @@ class CategoriesController extends Controller
     {
         // validation category
         $validation_categories = [
-            'description_en' => 'required',
-            'notes_en' => 'required',
+            'category_en' => 'required',
+            'category_description_en' => 'required',
+            'category_notes_en' => 'required',
             'menu_id' => 'required',
             'parent_id' => 'required',
         ];
@@ -118,11 +119,11 @@ class CategoriesController extends Controller
         // store the category in en
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
-        // instantiate App\Model\Category - master
-
-
         $menu_id = $request->menu_id;
+        //find menu by id
         $menu = Menu::find($menu_id);
+
+        //if no menu
         if (!$menu) {
             return [
                 'status' => false,
@@ -150,8 +151,9 @@ class CategoriesController extends Controller
         if ($request->description_en && $request->notes_en) {
             // store en version
             $category_en = $category->categoryTrans()->create([
-                'description' => $request->description_en,
-                'notes' => $request->notes_en,
+                'category' => $request->category_en,
+                'description' => $request->category_description_en,
+                'notes' => $request->category_notes_en,
                 'lang_id' => $en_id,
             ]);
         }
@@ -168,13 +170,14 @@ class CategoriesController extends Controller
         $category_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->description_ar && $request->notes_ar) {
+        if ($request->category_ar && $request->category_description_ar && $request->category_notes_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
             $category_ar = $category->categoryTrans()->create([
-                'description' => $request->description_ar,
-                'notes' => $request->notes_ar,
+                'category' => $request->category_ar,
+                'description' => $request->category_description_ar,
+                'notes' => $request->category_notes_ar,
                 'lang_id' => $ar_id,
             ]);
 
@@ -210,8 +213,9 @@ class CategoriesController extends Controller
     {
         // validation category
         $validation_categories = [
-            'description_en' => 'required',
-            'notes_en' => 'required',
+            'category_en' => 'required',
+            'category_description_en' => 'required',
+            'category_notes_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_categories);
@@ -240,8 +244,10 @@ class CategoriesController extends Controller
         if ($category->save()) {
 
             $category_en = $category->translate(1);
-            $category_en->description = $request->description_en;
-            $category_en->notes = $request->notes_en;
+
+            $category_en->category = $request->category_description_en;
+            $category_en->description = $request->category_description_en;
+            $category_en->notes = $request->category_notes_en;
 
             // check save status
             if (!$category_en->save()) {
@@ -252,10 +258,13 @@ class CategoriesController extends Controller
                 ];
             }
 
-            if ($request->description_ar && $request->description) {
+            if ($request->category_ar && $request->category_description_ar && $request->category_notes_ar) {
+
                 $category_ar = $category->translate(2);
-                $category_ar->description = $request->description_ar;
-                $category_ar->notes = $request->notes_ar;
+
+                $category_ar->category = $request->category_ar;
+                $category_ar->description = $request->category_description_ar;
+                $category_ar->notes = $request->category_notes_ar;
 
                 // check save status
                 if (!$category_ar->save()) {
@@ -266,7 +275,6 @@ class CategoriesController extends Controller
                     ];
                 }
             }
-
 
             // check save success
             return [
@@ -297,6 +305,7 @@ class CategoriesController extends Controller
             ];
         }
 
+        //find product by category_id
         $product = Product::where('category_id', $id)->first();
 
         //delete data from categoryTrans
@@ -318,5 +327,4 @@ class CategoriesController extends Controller
             'msg' => 'Data Deleted Successfully!'
         ];
     }
-//    }
 }

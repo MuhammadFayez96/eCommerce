@@ -2,17 +2,17 @@
 // Modals
 // --------------------------------------------------
 
-// .modal-open      - body class for killing the scroll
-// .modal           - container to scroll within
-// .modal-dialog    - positioning shell for the actual modal
-// .modal-content   - actual modal w/ bg and corners and shit
+// .modals-open      - body class for killing the scroll
+// .modals           - container to scroll within
+// .modals-dialog    - positioning shell for the actual modals
+// .modals-content   - actual modals w/ bg and corners and shit
 
 // Kill the scroll on the body
 .modal-open {
   overflow: hidden;
 }
 
-// Container that the modal scrolls within
+// Container that the modals scrolls within
 .modal {
   display: none;
   overflow: hidden;
@@ -28,7 +28,7 @@
   // https://github.com/twbs/bootstrap/pull/10951.
   outline: 0;
 
-  // When fading in the modal, animate it to slide down
+  // When fading in the modals, animate it to slide down
   &.fade .modal-dialog {
     .translate(0, -25%);
     .transition-transform(~"0.3s ease-out");
@@ -40,14 +40,14 @@
   overflow-y: auto;
 }
 
-// Shell div to position the modal with bottom padding
+// Shell div to position the modals with bottom padding
 .modal-dialog {
   position: relative;
   width: auto;
   margin: 10px;
 }
 
-// Actual modal
+// Actual modals
 .modal-content {
   position: relative;
   background-color: @modal-content-bg;
@@ -56,7 +56,7 @@
   border-radius: @border-radius-large;
   .box-shadow(0 3px 9px rgba(0,0,0,.5));
   background-clip: padding-box;
-  // Remove focus outline from opened modal
+  // Remove focus outline from opened modals
   outline: 0;
 }
 
@@ -75,7 +75,7 @@
 }
 
 // Modal header
-// Top section of the modal w/ title and dismiss
+// Top section of the modals w/ title and dismiss
 .modal-header {
   padding: @modal-title-padding;
   border-bottom: 1px solid @modal-header-border-color;
@@ -93,7 +93,7 @@
 }
 
 // Modal body
-// Where all modal content resides (sibling of .modal-header and .modal-footer)
+// Where all modals content resides (sibling of .modals-header and .modals-footer)
 .modal-body {
   position: relative;
   padding: @modal-inner-padding;
@@ -121,7 +121,7 @@
   }
 }
 
-// Measure scrollbar width for padding body during modal show/hide
+// Measure scrollbar width for padding body during modals show/hide
 .modal-scrollbar-measure {
   position: absolute;
   top: -9999px;
@@ -130,9 +130,9 @@
   overflow: scroll;
 }
 
-// Scale up the modal
+// Scale up the modals
 @media (min-width: @screen-sm-min) {
-  // Automatically set modal's width for larger viewports
+  // Automatically set modals's width for larger viewports
   .modal-dialog {
     width: @modal-md;
     margin: 30px auto;

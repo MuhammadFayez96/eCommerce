@@ -33,6 +33,7 @@ class MenusController extends Controller
             ];
         }
 
+        //get menu deatils
         $menu_translated = $menu->translate();
         $menu->menu_translated = $menu_translated;
 
@@ -93,8 +94,9 @@ class MenusController extends Controller
     {
         // validation menus
         $validation_menus = [
-            'description_en' => 'required',
-            'notes_en' => 'required',
+            'menu_en' => 'required',
+            'menu_description_en' => 'required',
+            'menu_notes_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_menus);
@@ -126,11 +128,12 @@ class MenusController extends Controller
         }
 
         $menu_en = null;
-        if ($request->description_en && $request->notes_en) {
+        if ($request->menu_en && $request->menu_description_en && $request->menu_notes_en) {
             // store en version
             $menu_en = $menu->menuTrans()->create([
-                'description' => $request->description_en,
-                'notes' => $request->notes_en,
+                'menu' => $request->menu_en,
+                'description' => $request->menu_description_en,
+                'notes' => $request->menu_notes_en,
                 'lang_id' => $en_id,
             ]);
         }
@@ -147,13 +150,14 @@ class MenusController extends Controller
         $menu_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->description_ar && $request->notes_ar) {
+        if ($request->menu_ar && $request->menu_description_ar && $request->menu_notes_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
             $menu_ar = $menu->menuTrans()->create([
-                'description' => $request->description_ar,
-                'notes' => $request->notes_ar,
+                'menu' => $request->menu_ar,
+                'description' => $request->menu_description_ar,
+                'notes' => $request->menu_notes_ar,
                 'lang_id' => $ar_id,
             ]);
 
@@ -187,8 +191,9 @@ class MenusController extends Controller
     {
         // validation menus
         $validation_menus = [
-            'description_en' => 'required',
-            'notes_en' => 'required',
+            'menu_en' => 'required',
+            'menu_description_en' => 'required',
+            'menu_notes_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_menus);
@@ -217,8 +222,10 @@ class MenusController extends Controller
         if ($menu->save()) {
 
             $menu_en = $menu->translate(1);
-            $menu_en->description = $request->description_en;
-            $menu_en->notes = $request->notes_en;
+
+            $menu_en->menu = $request->menu_en;
+            $menu_en->description = $request->menu_description_en;
+            $menu_en->notes = $request->menu_notes_en;
 
             // check save status
             if (!$menu_en->save()) {
@@ -229,11 +236,13 @@ class MenusController extends Controller
                 ];
             }
 
-            if ($request->description_ar && $request->notes_ar) {
+            if ($request->menu_ar && $request->menu_description_ar && $request->menu_notes_ar) {
 
                 $menu_ar = $menu->translate(2);
-                $menu_ar->description = $request->description_ar;
-                $menu_ar->notes = $request->notes_ar;
+
+                $menu_ar->menu = $request->menu_ar;
+                $menu_ar->description = $request->menu_description_ar;
+                $menu_ar->notes = $request->menu_notes_ar;
 
 
                 // check save status
@@ -274,10 +283,14 @@ class MenusController extends Controller
                 'msg' => 'There is no menu with this id!!'
             ];
         }
+
+        //find category by menu_id
         $category = Category::where('menu_id', $id)->first();
 
+        //get category_id from category by menu_id
         $category_id = Category::where('menu_id', $id)->first()->id;
 
+        //find product by category_id
         $product = Product::where('category_id', $category_id)->first();
 
         //delete data from optionTrans

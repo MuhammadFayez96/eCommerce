@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * Class UsersController
@@ -19,6 +18,7 @@ class UsersController extends Controller
      */
     public function getUser($id)
     {
+        //find user by id
         $user = User::find($id);
 
         if (!$user) {
@@ -29,7 +29,9 @@ class UsersController extends Controller
             ];
         }
 
+        //get user details
         $user_bought = $user->details()->getResults();
+
         $user->user_bought = $user_bought;
 
         // check success status
@@ -47,8 +49,10 @@ class UsersController extends Controller
      */
     public function getAllUsers()
     {
+        //get all users
         $users = User::all();
 
+        //check if no user
         if (count($users) == 0) {
             return [
                 'status' => false,
@@ -57,6 +61,7 @@ class UsersController extends Controller
             ];
         }
 
+        //get all user details
         foreach ($users as $user) {
 
             $user_bought = $user->details()->getResults();
@@ -107,19 +112,37 @@ class UsersController extends Controller
             ];
         }
 
+        //get role_id from request
+        $role_id = $request->role_id;
+
+        //get role
+        $role = Role::find($role_id);
+
+        //check if no role
+        if (!$role) {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no role in such id!'
+            ];
+        }
+
+        //insert data into user model
         $user = User::forceCreate([
+            'role_id' => $role_id,
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'address-1' => $request->address_1,
-            'address-2' => $request->address_2,
+            'password' => bcrypt($request->password),
+            'address_1' => $request->address_1,
+            'address_2' => $request->address_2,
             'mobile' => $request->mobile,
             'phone' => $request->phone,
             'gender' => $request->gender,
-            'postal-code' => $request->postal_code,
+            'postal_code' => $request->postal_code,
             'notes' => $request->notes,
         ]);
 
+        //check if no user
         if (!$user) {
             return [
                 'status' => false,
@@ -128,6 +151,7 @@ class UsersController extends Controller
             ];
         }
 
+        //check save status
         if ($user->save()) {
             // check save status
             return [
@@ -172,7 +196,10 @@ class UsersController extends Controller
             ];
         }
 
+        //find user by id
         $user = User::find($id);
+
+        //check if no user
         if (!$user) {
             return [
                 'status' => false,
@@ -192,8 +219,10 @@ class UsersController extends Controller
         $user->postal_code = $request->postal_code;
         $user->notes = $request->notes;
 
+        //check save status
         if ($user->save()) {
 
+            //check save status
             return [
                 'status' => true,
                 'data' => [
@@ -211,8 +240,10 @@ class UsersController extends Controller
      */
     public function deleteUser($id)
     {
+        //find user by id
         $user = User::find($id);
 
+        //check if no user
         if (!$user) {
             return [
                 'status' => false,
@@ -221,6 +252,7 @@ class UsersController extends Controller
             ];
         }
 
+        //delete user
         $user->delete();
 
         //check success status

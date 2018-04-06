@@ -174,6 +174,7 @@ class RolesController extends Controller
             }
         }
 
+        //check save status
         return [
             'status' => true,
             'data' => [
@@ -210,8 +211,12 @@ class RolesController extends Controller
             ];
         }
 
+        //find role by id
         $role = Role::find($id);
+
+        //if no role
         if (!$role) {
+            //check if no role
             return [
                 'status' => false,
                 'data' => null,
@@ -221,13 +226,17 @@ class RolesController extends Controller
 
 
         $role->role = $request->role;
+
+        //if role save successfully
         if ($role->save()) {
 
             $role_en = $role->translate(1);
+
             $role_en->displayName = $request->role_displayName_en;
             $role_en->description = $request->role_description_en;
             $role_en->notes = $request->role_notes_en;
 
+            //check save status
             if (!$role_en->save()) {
                 return [
                     'status' => false,
@@ -240,10 +249,12 @@ class RolesController extends Controller
             if ($request->role_displayName_ar && $request->role_description_ar && $request->role_notes_ar) {
 
                 $role_ar = $role->translate(2);
+
                 $role_ar->displayName = $request->role_displayName_ar;
                 $role_ar->description = $request->role_description_ar;
                 $role_ar->notes = $request->role_notes_ar;
 
+                //check save status
                 if (!$role_ar->save()) {
                     return [
                         'status' => false,
@@ -252,7 +263,6 @@ class RolesController extends Controller
                     ];
                 }
             }
-
 
             //check success status
             return [

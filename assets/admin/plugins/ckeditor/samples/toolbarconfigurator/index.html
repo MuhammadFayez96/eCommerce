@@ -426,14 +426,14 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			if ( CKEDITOR.env.ie && CKEDITOR.env.version == 8 ) {
 				helpButton.hide();
 			} else {
-				// Display help modal when the button is clicked.
+				// Display help modals when the button is clicked.
 				helpButton.on( 'click', function( evt ) {
 					SF.modal( {
-						// Clone modal content from DOM.
+						// Clone modals content from DOM.
 						content: helpContent.getHtml(),
 
 						afterCreate: function( modal ) {
-							// Enable modal content button to close the modal.
+							// Enable modals content button to close the modals.
 							new CKEDITOR.dom.element( modal.modalElem() ).findOne( '.help-content-close' ).once( 'click', modal.close );
 						}
 					} ).show();

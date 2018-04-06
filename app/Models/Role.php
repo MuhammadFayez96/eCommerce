@@ -30,8 +30,12 @@ class Role extends Model
         return $this->hasMany('App\Models\RoleTranslation', 'role_id', 'id');
     }
 
+    public function user()
+    {
+        return $this->hasMany('App\Models\User', 'role_id', 'id');
+    }
     /**
-     * @param null $lange_id
+     * @param null $lang_id
      * @return Model|null|object|static
      */
     public function translate($lang_id = null)

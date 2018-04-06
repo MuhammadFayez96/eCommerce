@@ -22,8 +22,8 @@
                     <button type="button" class="btn btn-outline" data-dismiss="modal">Close</button>
                 </div>
             </div>
-            <!-- /.modal-content -->
+            <!-- /.modals-content -->
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modals-dialog -->
     </div>
 </script>
