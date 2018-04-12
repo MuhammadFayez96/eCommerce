@@ -14,7 +14,7 @@
 Route::group(['namespace' => 'Admin'], function () {
 
     // admin home / index page
-    Route::get('/home', 'HomeController@index')->name('admin.home');
+    Route::get('/admin', 'HomeController@index')->name('admin.home');
 
     //users routes
     Route::group(['prefix' => 'users/'], function () {
