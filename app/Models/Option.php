@@ -35,21 +35,44 @@ class Option extends Model
         return $this->hasMany('App\Models\OptionValues', 'option_id', 'id');
     }
 
+    public function optionValuesTranslated($lang_code = null)
+    {
+
+      if (!$lang_code) {
+
+        $lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
+
+      } else {
+
+        $lang_id = Language::where('lang_code', $lang_code)->first()->id;
+
+      }
+
+        return $this->optionValues()->where('lang_id', $lang_id)->get();
+    }
+
     public function optionValues_details()
     {
         return $this->optionValues()->getResults();
     }
 
     /**
-     * @param null $lang_id
+     * @param null $lang_code
      * @return Model|null|object|static
      */
-    public function translate($lang_id = null)
+    public function translate($lang_code = null)
     {
-        $local_lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
+      if (!$lang_code) {
 
-        return $this->optionTrans()->where('lang_id', $lang_id ? $lang_id : $local_lang_id)->first();
+        $lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
+
+      }else {
+
+        $lang_id = Language::where('lang_code', $lang_code)->first()->id;
+
+      }
+
+        return $this->optionTrans()->where('lang_id', $lang_id)->first();
     }
-
 
 }

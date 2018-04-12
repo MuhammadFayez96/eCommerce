@@ -62,7 +62,7 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('get-create', 'CategoriesController@getCreateNewCategory')->name('admin.categories.getCreateNewCategory');
         Route::post('create', 'CategoriesController@createNewCategory')->name('admin.categories.createNewCategory');
         Route::get('get-update/{id}', 'CategoriesController@getUpdateCategory')->name('admin.categories.getUpdateCategory');
-        Route::post('post-update/{id}', 'CategoriesController@UpdateCategory')->name('admin.categories.updateCategory');
+        Route::post('post-update/{id}', 'CategoriesController@updateCategory')->name('admin.categories.updateCategory');
         Route::delete('delete/{id}', 'CategoriesController@deleteCategory')->name('admin.categories.deleteCategory');
     });
 
@@ -72,8 +72,9 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('get-create', 'OptionsController@getCreateNewOption')->name('admin.options.getCreateNewOption');
         Route::post('create', 'OptionsController@createNewOption')->name('admin.options.createNewOption');
         Route::get('get-update/{id}', 'OptionsController@getUpdateOption')->name('admin.options.getUpdateOption');
-        Route::post('post-update/{id}', 'OptionsController@UpdateOption')->name('admin.options.updateOption');
+        Route::post('post-update/{id}', 'OptionsController@updateOption')->name('admin.options.updateOption');
         Route::delete('delete/{id}', 'OptionsController@deleteOption')->name('admin.options.deleteOption');
+        Route::post('delete-value/{id}', 'OptionsController@deleteOptionValue')->name('admin.options.deleteOptionValue');
     });
 
     //products routes
@@ -82,22 +83,21 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('get-create', 'ProductsController@getCreateNewProduct')->name('admin.products.getCreateNewProduct');
         Route::post('create', 'ProductsController@createNewProduct')->name('admin.products.createNewProduct');
         Route::get('get-update/{id}', 'ProductsController@getUpdateProduct')->name('admin.products.getUpdateProduct');
-        Route::post('post-update/{id}', 'ProductsController@UpdateProduct')->name('admin.products.updateProduct');
+        Route::post('post-update/{id}', 'ProductsController@updateProduct')->name('admin.products.updateProduct');
         Route::delete('delete/{id}', 'ProductsController@deleteProduct')->name('admin.products.deleteProduct');
     });
 
 
-    //products routes
+    //boughts routes
     Route::group(['prefix' => 'boughts/'], function () {
         Route::get('', 'BoughtsController@getIndex')->name('admin.boughts.getIndex');
         Route::get('get-create', 'BoughtsController@getCreateNewBought')->name('admin.boughts.getCreateNewBought');
+        Route::get('bought-section', 'BoughtsController@getBoughtSectionView')->name('admin.boughts.getBoughtSectionView');
+        Route::get('option-section', 'BoughtsController@getOptionSectionView')->name('admin.boughts.getOptionSectionView');
         Route::post('create', 'BoughtsController@createNewBought')->name('admin.boughts.createNewBought');
         Route::get('get-update/{id}', 'BoughtsController@getUpdateBought')->name('admin.boughts.getUpdateBought');
-        Route::post('post-update/{id}', 'BoughtsController@UpdateBought')->name('admin.boughts.updateBought');
+        Route::post('post-update/{id}', 'BoughtsController@updateBought')->name('admin.boughts.updateBought');
         Route::delete('delete/{id}', 'BoughtsController@deleteBought')->name('admin.boughts.deleteBought');
     });
 
 });
-
-
-

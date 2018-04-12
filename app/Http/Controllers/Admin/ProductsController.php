@@ -62,17 +62,6 @@ class ProductsController extends Controller
             // key is option_translated and the value id $option_translated
             $option->option_translated = $option_translated;
 
-            $optionValue = OptionValues::find($option->id);
-
-            $option_value = $optionValue->translate();
-
-            $optionValue = OptionValues::find($option->id);
-
-            $option_value_id = OptionValues::find($option->id)->first()->id;
-
-            $optionValues = $optionValue->translate()->where('option_value_id', $option_value_id)->get();
-
-
         }
 
         return view('admin.pages.products.add-product', compact('categories', 'options','optionValues'));
@@ -84,8 +73,11 @@ class ProductsController extends Controller
         $validation_products = [
             'type_en' => 'required',
             'name_en' => 'required',
+            'name_ar' => 'required',
             'description_en' => 'required',
+            'description_ar' => 'required',
             'notes_en' => 'required',
+            'notes_ar' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_products);
@@ -122,6 +114,7 @@ class ProductsController extends Controller
 
         $product = Product::forceCreate([
             'category_id' => $category_id,
+            'type' => $request->type_en,
         ]);
 
         // check saving success
@@ -132,12 +125,11 @@ class ProductsController extends Controller
                 'text' => 'something went wrong, please try again!'
             ];
         }
-
         $product_en = null;
-        if ($request->type_en && $request->name_en && $request->description_en && $request->notes_en) {
+
+        if ( $request->name_en) {
             // store en version
             $product_en = $product->productTrans()->create([
-                'type' => $request->type_en,
                 'name' => $request->name_en,
                 'description' => $request->description_en,
                 'notes' => $request->notes_en,
@@ -156,12 +148,12 @@ class ProductsController extends Controller
         $product_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->type_ar && $request->name_ar && $request->description_ar && $request->notes_ar) {
+        if ( $request->name_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
             $product_ar = $product->productTrans()->create([
-                'type' => $request->type_ar,
+                // 'type' => $request->type_en,
                 'name' => $request->name_ar,
                 'description' => $request->description_ar,
                 'notes' => $request->notes_ar,
@@ -178,14 +170,7 @@ class ProductsController extends Controller
             }
         }
 
-        $id = $product->id;
-        if ($request->type_en = 'normal') {
-            $this->createNewNormalProduct($id, $request);
-        }
-        if ($request->type_en = 'option') {
-            $this->createNewProductOptionValues($id, $request);
-        }
-
+        //check successfully status
         return [
             'status' => 'success',
             'title' => 'Success',
@@ -361,22 +346,15 @@ class ProductsController extends Controller
         //find product by id
         $product = Product::find($id);
 
-        $product_translated = $product->translate();
-        $product->product_translated = $product_translated;
+        //product arabic translate details
+        $product_translated_ar = $product->translate('ar');
 
-        $normal_product = $product->normalProductDetails()->get();
-        $product->normal_product = $normal_product;
+        $product->ar = $product_translated_ar;
 
-        $option_product = $product->productOptionValue()->get();
-        $product->option_product = $option_product;
+        //english product translate details
+        $product_translated_en = $product->translate('en');
 
-        foreach ($product->normal_product as $normal) {
-            $Normal = $normal;
-        }
-
-        foreach ($product->option_product as $option) {
-            $Option = $option;
-        }
+        $product->en = $product_translated_en;
 
 
         //get all category from db
@@ -392,43 +370,23 @@ class ProductsController extends Controller
             $category->category_translated = $category_translated;
         }
 
-        //get all option in db
-        $options = Option::all();
-
-        // append translated option to all options
-        foreach ($options as $option) {
-
-            // get option details
-            $option_translated = $option->translate();
-
-            // add the translated option as a key => value to main option object
-            // key is option_translated and the value id $option_translated
-            $option->option_translated = $option_translated;
-
-            $optionValue = OptionValues::find($option->id);
-
-            $option_value_id = OptionValues::find($option->id)->first()->id;
-
-            $optionValues = $optionValue->translate()->where('option_value_id', $option_value_id)->get();
-        }
-
-
-//        dd($options);
-        return view('admin.pages.products.edit-product', compact('product', 'categories', 'options', 'Normal', 'Option', 'optionValues'));
+        return view('admin.pages.products.edit-product', compact('product', 'categories'));
     }
 
-    public
-    function updateProduct($id, Request $request)
+    public function updateProduct($id, Request $request)
     {
         // validation products
-        $validation_products = [
+        $validation_rules = [
             'type_en' => 'required',
             'name_en' => 'required',
+            'name_ar' => 'required',
+            'description_ar' => 'required',
             'description_en' => 'required',
             'notes_en' => 'required',
+            'notes_ar' => 'required',
         ];
 
-        $validation = validator($request->all(), $validation_products);
+        $validation = validator($request->all(), $validation_rules);
 
         // if validation failed, return false response
         if ($validation->fails()) {
@@ -451,11 +409,14 @@ class ProductsController extends Controller
             ];
         }
 
+        //store request category id
+        $product->category_id = $request->category_id;
+        $product->type = $request->type_en;
+
         //check save status
         if ($product->save()) {
 
-            $product_en = $product->translate(1);
-            $product_en->type = $request->type_en;
+            $product_en = $product->translate('en');
             $product_en->name = $request->name_en;
             $product_en->description = $request->description_en;
             $product_en->notes = $request->notes_en;
@@ -469,17 +430,9 @@ class ProductsController extends Controller
                 ];
             }
 
-            if ($request->type_en = 'normal') {
-                $this->updateNormalProductDetails($id, $request);
+            if ($request->name_ar) {
 
-            }
-            if ($request->type_en = 'withPrice') {
-                $this->updateProductOptionValues($id, $request);
-            }
-
-            if ($request->type_ar && $request->name_ar && $request->description_ar && $request->notes_ar) {
-                $product_ar = $product->translate(2);
-                $product_ar->type = $request->type_ar;
+                $product_ar = $product->translate('ar');
                 $product_ar->name = $request->name_ar;
                 $product_ar->description = $request->description_ar;
                 $product_ar->notes = $request->notes_ar;
@@ -494,7 +447,6 @@ class ProductsController extends Controller
                 }
             }
 
-
             // check save success
             return [
                 'status' => 'success',
@@ -504,8 +456,7 @@ class ProductsController extends Controller
         }
     }
 
-    public
-    function updateNormalProductDetails($id, Request $request)
+    public function updateNormalProductDetails($id, Request $request)
     {
         // validation products
         $validation_normalProducts = [
@@ -623,8 +574,7 @@ class ProductsController extends Controller
 
     }
 
-    public
-    function deleteProduct($id)
+    public function deleteProduct($id)
     {
         //search  for product
         $product = Product::find($id);
@@ -632,22 +582,22 @@ class ProductsController extends Controller
         //if no product
         if (!$product) {
             return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'There is no Product with this id!'
+                'status' => 'error',
+                'title' => 'Error',
+                'text' => 'There is no Product with this id!'
             ];
         }
 
-        $productOptionValue = ProductOptionValues::where('product_id', $id)->first();
+        // $productOptionValue = ProductOptionValues::where('product_id', $id)->first();
 
         //delete productOptionValueDetails
-        $productOptionValue->productOptionValueDetails()->delete();
+        // $productOptionValue->productOptionValueDetails()->delete();
 
         //delete productOptionValue
-        $product->productOptionValue()->delete();
+        // $product->productOptionValue()->delete();
 
         //delete normalProductDetails
-        $product->normalProductDetails()->delete();
+        // $product->normalProductDetails()->delete();
 
         //delete productTrans
         $product->productTrans()->delete();

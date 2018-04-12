@@ -12,6 +12,9 @@
     {{--<meta name="contactPhoneNumber" CONTENT="{{ $settings->site_phone1 }}">--}}
     {{--<meta name="contactPhoneNumber1" CONTENT="{{ $settings->site_phone1 }}">--}}
     {{--<meta name="contactPhoneNumber2" CONTENT="{{ $settings->site_phone2 }}">--}}
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>eCommerce-grade | @yield('title')</title>
     <!-- Tell the browser to be responsive to screen width -->
@@ -30,7 +33,7 @@
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('assets/admin/plugins/iCheck/flat/blue.css') }}">
     <!-- Morris chart -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/morris/morris.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('assets/admin/plugins/morris/morris.css') }}"> -->
     <!-- ٍSelect2  -->
     <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/select2.min.css') }}">
     <!-- jvectormap -->
@@ -46,8 +49,9 @@
     {{--<!--  <link rel="stylesheet" href="{{ asset('assets/admin/bootstrap/css/bootstrap-rtl.css') }}">--}}
     {{--<link rel="stylesheet" href="{{ asset('assets/admin/dist/css/Style-AR-2.css') }}"> -->--}}
 
-    <link rel="stylesheet" href="{{ asset('assets/admin/sweetalert.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('assets/admin/sweetalert.css') }}"> -->
     <link rel="stylesheet" href="{{ asset('assets/admin/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/bootstrap-select/css/bootstrap-select.min.css') }}">
     @yield('styles')
     <link rel="shortcut icon" href="">
 
@@ -153,8 +157,6 @@
 <!--Modals-->
 @yield('modals')
 @yield('templates')
-<!-- csrf form  -->
-<form id="csrf">{!! csrf_field() !!}</form>
 
 <script src="{{ asset('assets/admin/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/jQueryUI/jQuery-ui.min.js') }}"></script>
@@ -165,7 +167,7 @@
 <script src="{{ asset('assets/admin/bootstrap/js/bootstrap.min.js') }}"></script>
 
 <script src="{{ asset('assets/admin/plugins/raphael/raphael.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/morris/morris.min.js') }}"></script>
+<!-- <script src="{{ asset('assets/admin/plugins/morris/morris.min.js') }}"></script> -->
 <script src="{{ asset('assets/admin/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
@@ -177,9 +179,14 @@
 <script src="{{ asset('assets/admin/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/fastclick/fastclick.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/select2/select2.full.min.js') }}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="{{ asset('assets/admin/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+
 <script src="{{ asset('assets/admin/dist/js/app.min.js') }}"></script>
-<script src="{{ asset('assets/admin/dist/js/pages/dashboard.js') }}"></script>
-<script src="{{ asset('assets/admin/dist/js/demo.js') }}"></script>
+
+
+<!-- <script src="{{ asset('assets/admin/dist/js/pages/dashboard.js') }}"></script> -->
+<!-- <script src="{{ asset('assets/admin/dist/js/demo.js') }}"></script> -->
 
 
 {{--<!-- <script src="{{ asset('assets/admin/dist/js/jquery.nicescroll.js') }}"></script> -->--}}
@@ -195,8 +202,17 @@
 @yield('scripts')
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 <script src="{{ asset('assets/admin/project.js') }}"></script>
-<script src="{{ asset('assets/admin/sweetalert.min.js') }}"></script>
+<!-- <script src="{{ asset('assets/admin/sweetalert.min.js') }}"></script> -->
 <script src="{{ asset('assets/admin/toastr.min.js') }}"></script>
+<script type="text/javascript">
+
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+
+</script>
 
 </body>
 </html>

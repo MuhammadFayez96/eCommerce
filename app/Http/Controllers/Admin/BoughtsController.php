@@ -18,10 +18,39 @@ class BoughtsController extends Controller
 
     public function getCreateNewBought()
     {
-        $roles=Role::all();
-        $products=ProductTranslation::all();
 
-        return view('admin.pages.boughts.add-bought',compact('roles','products'));
+        $role = Role::where('role','vendor')->first();
+
+        $products = Product::all();
+
+        // append translated products to all countries
+        foreach ($products as $product) {
+
+            // get product details
+            $product->trans = $product->translate();
+        }
+
+        return view('admin.pages.boughts.add-bought',compact('role','products'));
+    }
+
+    public function getBoughtSectionView()
+    {
+
+        $products = Product::all();
+
+        // append translated products to all countries
+        foreach ($products as $product) {
+
+            // get product details
+            $product->trans = $product->translate();
+        }
+
+        return view('admin.pages.boughts.templates.bought-section', compact('products'))->render();
+    }
+
+    public function getOptionSectionView()
+    {
+        return view('admin.pages.boughts.templates.option-section')->render();
     }
 
     public function createNewBought(Request $request)

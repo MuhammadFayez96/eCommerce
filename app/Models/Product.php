@@ -60,15 +60,23 @@ class Product extends Model
     }
 
     /**
-     * @param null $lang_id
+     * @param null $lang_code
      * @return Model|null|object|static
      */
-    public function translate($lang_id = null)
-    {
-        $local_lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
 
-        return $this->productTrans()->where('lang_id', $lang_id ? $lang_id : $local_lang_id)->first();
+    public function translate($lang_code = null)
+    {
+        if (!$lang_code) {
+
+            $lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
+        } else {
+
+            $lang_id = Language::where('lang_code', $lang_code)->first()->id;
+        }
+
+        return $this->productTrans()->where('lang_id', $lang_id)->first();
     }
+
 
 
 }

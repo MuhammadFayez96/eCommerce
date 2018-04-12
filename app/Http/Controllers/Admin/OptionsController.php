@@ -34,14 +34,16 @@ class OptionsController extends Controller
             $option->option_translated = $option_translated;
 
             //find optionValue by option_id
-            $optionValue = OptionValues::find($option->id);
+            $optionValues = $option->optionValues;
 
-            //get details for optionValue
-            $option_value = $optionValue->translate();
+            foreach ($optionValues as $option_value) {
 
+              $option_value->trans = $option_value->translate();
+
+            }
             // add the translated option as a key => value to main option object
             // key is option_value_translated and the value id $option_value
-            $option->option_value_translated = $option_value;
+            $option->option_values = $optionValues;
         }
 
         return view('admin.pages.options.index', compact('options'));
@@ -65,7 +67,9 @@ class OptionsController extends Controller
         // validation options
         $validation_options = [
             'option_name_en' => 'required',
+            'option_name_ar' => 'required',
             'option_value_en' => 'required',
+            'option_value_ar' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_options);
@@ -114,10 +118,32 @@ class OptionsController extends Controller
             ];
         }
 
+        $option_ar = null;
+        // store ar version
+        // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
+        if ($request->option_name_ar) {
+
+            $ar_id = Language::where('lang_code', 'ar')->first()->id;
+
+            $option_ar = $option->optionTrans()->create([
+                'option' => $request->option_name_ar,
+                'lang_id' => $ar_id,
+            ]);
+
+            // check save status
+            if (!$option_ar) {
+                return [
+                    'status' => 'error',
+                    'title' => 'Error',
+                    'text' => 'something went wrong while saving AR, please try again!'
+                ];
+            }
+        }
 
         if ($option->save()) {
 
-            //get option id
+            //get option i
+            //get option i2
             $option_id = $option->id;
 
             //find options by id
@@ -132,35 +158,38 @@ class OptionsController extends Controller
                 ];
             }
 
-            //store option id in database
-            $optionValues = OptionValues::forceCreate([
-                'option_id' => $option_id,
-            ]);
 
-
-            // check saving success
-            if (!$optionValues->save()) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong, please try again!'
-                ];
-            }
+            $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
             //define $optionValues_en is null
-            $optionValues_en = null;
+            $option_values_en = null;
+
+            //define $optionValues_ar is null
+            $option_values_ar = null;
 
             //store multi value in db
             foreach ($request->option_value_en as $key => $v) {
+
+                //store option id in database
+                $option_values = OptionValues::forceCreate([
+                    'option_id' => $option_id,
+                ]);
+
                 // store en version
-                $optionValues_en = $optionValues->optionValuesTrans()->create([
+                $option_values_en = $option_values->optionValuesTrans()->create([
                     'value' => $request->option_value_en[$key],
                     'lang_id' => $en_id,
                 ]);
+
+                $option_values_ar=$option_values->optionValuesTrans()->create([
+                  'value' =>$request->option_value_ar[$key],
+                  'lang_id' => $ar_id,
+                ]);
+
             }
 
             // check saving status
-            if (!$optionValues_en) {
+            if (!$option_values_en) {
                 return [
                     'status' => 'Error',
                     'title' => 'error',
@@ -168,54 +197,16 @@ class OptionsController extends Controller
                 ];
             }
 
-            $option_ar = null;
-            // store ar version
-            // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-            if ($request->option_name_ar) {
-
-                $ar_id = Language::where('lang_code', 'ar')->first()->id;
-
-                $option_ar = $option->optionTrans()->create([
-                    'option' => $request->option_name_ar,
-                    'lang_id' => $ar_id,
-                ]);
-
-                // check save status
-                if (!$option_ar) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while saving AR, please try again!'
-                    ];
-                }
+            // check save status
+            if (!$option_values_ar) {
+                return [
+                    'status' => 'error',
+                    'title' => 'Error',
+                    'text' => 'something went wrong while saving AR, please try again!'
+                ];
             }
-
-            $optionValues_ar = null;
-            if ($request->option_value_ar) {
-
-                //get id if lang code from language model is ar
-                $ar_id = Language::where('lang_code', 'ar')->first()->id;
-
-                //store multi value in db
-                foreach ($request->option_value_ar as $key => $v) {
-                    // store en version
-                    $optionValues_ar = $optionValues->optionValuesTrans()->create([
-                        'value' => $request->option_value_ar[$key],
-                        'lang_id' => $ar_id,
-                    ]);
-                }
-
-                // check save status
-                if (!$optionValues_ar) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while saving AR, please try again!'
-                    ];
-                }
-            }
-
             // check saving success
+
             return [
                 'status' => 'success',
                 'title' => 'success',
@@ -233,20 +224,33 @@ class OptionsController extends Controller
         //find option by id
         $option = Option::find($id);
 
-        //get option details
-        $option_translated = $option->translate();
+        // $option_translated=$option->optionTrans;
+
+        //get option details when lang en
+        $option_translated = $option->translate('en');
 
         // add the translated option as a key => value to main option object
         // key is option_translated and the value id $option_translated
-        $option->option_translated = $option_translated;
+        $option->option_en_translated = $option_translated;
+
+        //get option details when lang ar
+        $option_ar_translated = $option->translate('ar');
+
+        // add the translated option as a key => value to main option object
+        // key is option_translated and the value id $option_translated
+        $option->option_ar_translated = $option_ar_translated;
 
         //get option value details
-        $optionValue = OptionValues::where('option_id', $id)->first();
+        // $optionValue = OptionValues::where('option_id', $id)->first();
+        $option_values = $option->optionValues;
 
-        //get option value translation details
-        $optionValues = OptionValuesTranslation::where('option_value_id', $optionValue->id)->get();
+        foreach ($option_values as $option_value) {
 
-        return view('admin.pages.options.edit-option', compact('option', 'optionValues'));
+            $option_value->en = $option_value->translate('en');
+            $option_value->ar = $option_value->translate('ar');
+        }
+
+        return view('admin.pages.options.edit-option', compact('option', 'option_values'));
     }
 
     /**
@@ -256,12 +260,14 @@ class OptionsController extends Controller
      */
     public function updateOption($id, Request $request)
     {
+
         // validation options
         $validation_options = [
             'option_name_en' => 'required',
+            'option_name_ar' => 'required',
             'option_value_en' => 'required',
-        ];
-
+            'option_value_ar' => 'required',
+          ];
         $validation = validator($request->all(), $validation_options);
 
         // if validation failed, return false response
@@ -284,80 +290,60 @@ class OptionsController extends Controller
             ];
         }
 
+        $en_lang_id = Language::where('lang_code', 'en')->first()->id;
+        $ar_lang_id = Language::where('lang_code', 'ar')->first()->id;
+
+        $option->optionTrans()->delete();
+
+        $option->optionTrans()->create([
+          'option' => $request->option_name_en,
+          'lang_id' => $en_lang_id,
+        ]);
+        $option->optionTrans()->create([
+          'option' => $request->option_name_ar,
+          'lang_id' => $ar_lang_id,
+        ]);
+
         //check save success
         if ($option->save()) {
 
-            //check en lang
-            $option_en = $option->translate(1);
+          $option_values = $option->optionValues;
 
-            //store option_name_en in option
-            $option_en->option = $request->option_name_en;
+          $option_values_en = $request->option_value_en;
+          $option_values_ar = $request->option_value_ar;
 
-            // check save status
-            if (!$option_en->save()) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong while updating EN, please try again!'
-                ];
-            }
-/////////////////////////////////////////////////////////////////////
-//            $values = $request->option_value_en;
-//            for ($i = 0; $i < count($values); $i++) {
-//                $optionValue->optionValuesTrans()->update(['value' => $values[$i]]);
-//            }
+          foreach ($option_values_en as $key => $opt_val_en) {
 
-/////////////////////////////////////////////////////////////////////
-            //define $optionValues_en is null
-            $optionValues_en = null;
+              if ($opt_val_en[1]) {
 
-            $en_id = Language::where('lang_code', 'en')->first()->id;
+                  $option_val = OptionValues::find($opt_val_en[1]);
+                  $option_val->optionValuesTrans()->delete();
+                  $option_val->optionValuesTrans()->create([
+                    'value' => $opt_val_en[0],
+                    'lang_id' => $en_lang_id
+                  ]);
 
-            $optionValue = OptionValues::find($option->id);
+                  $option_val->optionValuesTrans()->create([
+                    'value' => $option_values_ar[$key][0],
+                    'lang_id' => $ar_lang_id
+                  ]);
 
-            //store multi value in db
-            foreach ($request->option_value_en as $key => $v) {
-                // store en version
-                $optionValues_en = $optionValue->optionValuesTrans()->update([
-                    'value' => $request->option_value_en[$key],
-                    'lang_id' => $en_id,
-                ]);
-            }
+                  continue;
+              }
 
-////////////////////////////////////////////////////////////////////
+              $option_val = OptionValues::forceCreate([
+                'option_id' => $option->id
+              ]);
+              $option_val->optionValuesTrans()->create([
+                'value' => $opt_val_en[0],
+                'lang_id' => $en_lang_id
+              ]);
 
-            if ($request->option_name_ar && $request->option_value_ar) {
-
-                //check ar lang for option
-                $option_ar = $option->translate(2);
-
-                //store option_name_ar in option
-                $option_ar->option = $request->option_name_ar;
-
-                // check save status
-                if (!$option_ar->save()) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while updating AR, please try again!'
-                    ];
-                }
-
-                //check ar lang for
-                $optionValue_ar = $optionValue->translate(2);
-
-                $optionValue_ar->value = $request->option_value_ar;
-
-                // check save status
-                if (!$optionValue_ar->save()) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while updating AR, please try again!'
-                    ];
-                }
-            }
-
+              $option_val->optionValuesTrans()->create([
+                'value' => $option_values_ar[$key][0],
+                'lang_id' => $ar_lang_id
+              ]);
+          }
 
             // check save success
             return [
@@ -410,5 +396,32 @@ class OptionsController extends Controller
             'title' => 'success',
             'text' => 'Data Deleted Successfully!'
         ];
+    }
+
+
+    public function deleteOptionValue($id)
+    {
+      //search optionValues by id
+      $option_value = OptionValues::find($id);
+
+      // check if no option
+      if (!$option_value) {
+          return [
+              'status' => 'error',
+              'title' => 'Error',
+              'text' => 'There is no option with this id!!'
+          ];
+      }
+
+      $option_value->optionValuesTrans()->delete();
+
+      $option_value->delete();
+
+      //check successfully deleted data
+      return [
+          'status' => 'success',
+          'title' => 'success',
+          'text' => 'Data Deleted Successfully!'
+      ];
     }
 }

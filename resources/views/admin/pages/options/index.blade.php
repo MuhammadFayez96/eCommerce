@@ -42,10 +42,17 @@
                         @foreach($options as $option)
                             <tr>
                                 <td class="text-center">{{$option->option_translated->option}}</td>
-                                <td class="text-center">{{$option->option_value_translated->value}}</td>
+                                <td class="text-center">
+                                  [
+                                  @foreach($option->option_values as $opt_val_tra)
+                                    {{$opt_val_tra->trans->value}}
+                                    {{!$loop->last ? ' , ' : ''}}
+                                  @endforeach
+                                  ]
+                                </td>
                                 <td class="text-center">
                                     <a href="{{url('options/get-update/'.$option->id)}}" class="btn btn-warning btn-sm">
-                                        <li class="fa fa-pencil"> Edit</li>
+                                        <li class="fa fa-penciltrans"> Edit</li>
                                     </a>
 
                                     <input type="hidden" name="_method" value="delete"/>
@@ -72,4 +79,3 @@
 @section('modals')
     @include('admin.pages.options.modals.delete-option')
 @endsection
-
