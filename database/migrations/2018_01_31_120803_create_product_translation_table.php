@@ -22,7 +22,6 @@ class CreateProductTranslationTable extends Migration
             $table->integer('lang_id')->unsigned();
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade');
 
-            $table->string('type')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
             $table->text('notes')->nullable();
