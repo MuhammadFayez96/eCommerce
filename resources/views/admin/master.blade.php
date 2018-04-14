@@ -30,26 +30,6 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/dist/css/AdminLTE.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/admin/dist/css/skins/skin-blue.min.css') }}">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/iCheck/flat/blue.css') }}">
-    <!-- Morris chart -->
-    <!-- <link rel="stylesheet" href="{{ asset('assets/admin/plugins/morris/morris.css') }}"> -->
-    <!-- ٍSelect2  -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/select2.min.css') }}">
-    <!-- jvectormap -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}">
-    <!-- Date Picker -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/datepicker/datepicker3.css') }}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/daterangepicker/daterangepicker-bs3.css') }}">
-    <!-- bootstrap wysihtml5 - text editor -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
-
-
-    {{--<!--  <link rel="stylesheet" href="{{ asset('assets/admin/bootstrap/css/bootstrap-rtl.css') }}">--}}
-    {{--<link rel="stylesheet" href="{{ asset('assets/admin/dist/css/Style-AR-2.css') }}"> -->--}}
-
-    <!-- <link rel="stylesheet" href="{{ asset('assets/admin/sweetalert.css') }}"> -->
     <link rel="stylesheet" href="{{ asset('assets/admin/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/bootstrap-select/css/bootstrap-select.min.css') }}">
     @yield('styles')
@@ -59,7 +39,7 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
-    {{--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>--}}
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <!--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
     <![endif]-->
 </head>
@@ -159,30 +139,12 @@
 @yield('templates')
 
 <script src="{{ asset('assets/admin/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/jQueryUI/jQuery-ui.min.js') }}"></script>
-<script>
-    $.widget.bridge('uibutton', $.ui.button);
-</script>
 
 <script src="{{ asset('assets/admin/bootstrap/js/bootstrap.min.js') }}"></script>
-
-<script src="{{ asset('assets/admin/plugins/raphael/raphael.min.js') }}"></script>
-<!-- <script src="{{ asset('assets/admin/plugins/morris/morris.min.js') }}"></script> -->
-<script src="{{ asset('assets/admin/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/knob/jquery.knob.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/moment/min/moment.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/daterangepicker/daterangepicker.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/fastclick/fastclick.js') }}"></script>
-<script src="{{ asset('assets/admin/plugins/select2/select2.full.min.js') }}"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="{{ asset('assets/admin/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
-
-<script src="{{ asset('assets/admin/dist/js/app.min.js') }}"></script>
+<script src="{{ asset('assets/admin/toastr.min.js') }}"></script>
+<script src="{{ asset('assets/admin/project.js') }}"></script>
 
 
 <!-- <script src="{{ asset('assets/admin/dist/js/pages/dashboard.js') }}"></script> -->
@@ -200,10 +162,7 @@
 
 
 @yield('scripts')
-<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-<script src="{{ asset('assets/admin/project.js') }}"></script>
-<!-- <script src="{{ asset('assets/admin/sweetalert.min.js') }}"></script> -->
-<script src="{{ asset('assets/admin/toastr.min.js') }}"></script>
+
 <script type="text/javascript">
 
 $.ajaxSetup({
