@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/admin/dist/css/AdminLTE.min.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/admin/dist/css/skins/skin-blue.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/dist/css/skin-blue.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/bootstrap-select/css/bootstrap-select.min.css') }}">
     @yield('styles')
@@ -145,13 +145,6 @@
 <script src="{{ asset('assets/admin/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
 <script src="{{ asset('assets/admin/toastr.min.js') }}"></script>
 <script src="{{ asset('assets/admin/project.js') }}"></script>
-
-
-<!-- <script src="{{ asset('assets/admin/dist/js/pages/dashboard.js') }}"></script> -->
-<!-- <script src="{{ asset('assets/admin/dist/js/demo.js') }}"></script> -->
-
-
-{{--<!-- <script src="{{ asset('assets/admin/dist/js/jquery.nicescroll.js') }}"></script> -->--}}
 
 <div id="common-modal" class="modal fade" role="dialog">
 
