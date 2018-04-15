@@ -138,7 +138,7 @@
 @yield('modals')
 @yield('templates')
 
-<script src="{{ asset('assets/admin/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
+<script src="{{ asset('assets/admin/jQuery/jQuery-2.2.0.min.js') }}"></script>
 
 <script src="{{ asset('assets/admin/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

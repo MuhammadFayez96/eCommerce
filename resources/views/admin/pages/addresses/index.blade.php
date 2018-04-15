@@ -36,7 +36,6 @@
                         <tr style="color: black; font-size: medium;">
                             <th class="text-center">country_code</th>
                             <th class="text-center">country</th>
-                            <th class="text-center">city</th>
                             <th class="text-center">operations</th>
                         </tr>
                         </thead>
@@ -45,7 +44,6 @@
                             <tr>
                                 <td class="text-center">{{$country->country_code}}</td>
                                 <td class="text-center">{{$country->country_translated->country}}</td>
-                                <td class="text-center">{{$country->city_translate->city}}</td>
                                 <td class="text-center">
                                     <a href="{{url('addresses/get-update/'.$country->id)}}"
                                        class="btn btn-warning btn-sm">
@@ -75,4 +73,3 @@
 @section('modals')
     @include('admin.pages.addresses.modals.delete-address')
 @endsection
-

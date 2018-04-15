@@ -32,8 +32,11 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('get-create', 'AddressesController@getCreateNewAddress')->name('admin.addresses.getCreateNewAddress');
         Route::post('create', 'AddressesController@createNewAddress')->name('admin.addresses.createNewAddress');
         Route::get('get-update/{id}', 'AddressesController@getUpdateAddress')->name('admin.addresses.getUpdateAddress');
-        Route::post('post-update/{id}', 'AddressesController@UpdateAddress')->name('admin.addresses.updateAddress');
+        Route::post('post-update', 'AddressesController@UpdateAddress')->name('admin.addresses.updateAddress');
         Route::delete('delete/{id}', 'AddressesController@deleteAddress')->name('admin.addresses.deleteAddress');
+        Route::get('get-add-city-templates', 'AddressesController@getAddCitiesTemplate')->name('get-add-city-templates');
+        Route::get('get-add-city-templates-for-edit', 'AddressesController@getAddCitiesTemplateInEdit')->name('get-add-city-templates-for-edit');
+        Route::get('delete-city/{id}', 'AddressesController@deleteCity')->name('delete-city');
     });
 
     //roles routes
