@@ -32,7 +32,7 @@ class Country extends Model
     }
 
 
-    public function city()
+    public function cities()
     {
         return $this->hasMany('App\Models\City', 'country_id', 'id');
     }

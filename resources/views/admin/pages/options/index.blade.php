@@ -41,7 +41,7 @@
                         <tbody class="table-hover">
                         @foreach($options as $option)
                             <tr>
-                                <td class="text-center">{{$option->option_translated->option}}</td>
+                                <td class="text-center">{{$option->trans->option}}</td>
                                 <td class="text-center">
                                   [
                                   @foreach($option->option_values as $opt_val_tra)

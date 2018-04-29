@@ -21,7 +21,9 @@ class CategoriesController extends Controller
     public function getIndex()
     {
         //get all category from db
-        $categories = Category::all();
+        $categories = Category::orderBy('parent_id')->get([
+            'id', 'menu_id', 'parent_id'
+        ]);
 
         // append translated category to all categories
         foreach ($categories as $category) {
@@ -55,18 +57,21 @@ class CategoriesController extends Controller
     public function getCreateNewCategory()
     {
         $menus = Menu::all();
+        $main_categories = Category::where('parent_id', 0)->get();
 
         // append translated menu to all menus
         foreach ($menus as $menu) {
             // get menu details
-            $menu_translated = $menu->translate();
-
-            // add the translated menu as a key => value to main menu object
-            // key is menu_translated and the value id $menu_translated
-            $menu->menu_translated = $menu_translated;
+            $menu->menu_translated = $menu->translate();
         }
 
-        return view('admin.pages.categories.add-category',compact('menus'));
+        //append translated category to all main categories
+        foreach ($main_categories as $category) {
+
+            $category->trans = $category->translate();
+        }
+
+        return view('admin.pages.categories.add-category',compact('menus', 'main_categories'));
     }
 
     /**
@@ -78,11 +83,7 @@ class CategoriesController extends Controller
         // validation category
         $validation_rules = [
             'category_en' => 'required',
-            'category_ar' => 'required',
             'description_en' => 'required',
-            'description_ar' => 'required',
-            'notes_en' => 'required',
-            'notes_ar' => 'required',
         ];
         $validation = validator($request->all(), $validation_rules);
 
@@ -101,47 +102,37 @@ class CategoriesController extends Controller
         // store the category in en
         $en_id = Language::where('lang_code', 'en')->first()->id;
 
-        //get menu from request
-        $menu_id = $request->menu_id;
 
-        //find menu by id
-        $menu = Menu::find($menu_id);
+        $main_category = null;
+        $menu = null;
+        if ($request->category_type == 'sub') {
 
-        //if no menu
-        if (!$menu) {
-            return [
-                'status' => 'error',
-                'title' => 'Error',
-                'text' => 'There is no menu with such id!'
-            ];
-        }
+            $main_category = Category::find($request->main_category_id);
+            $menu = $main_category->menu;
 
-        //store data in category
-        $category = Category::forceCreate([
-            'menu_id' => $menu_id,
-            'parent_id' => '1',
-        ]);
-
-
-        // check saving success
-        if (!$category->save()) {
-            return [
-                'status' => 'error',
-                'title' => 'Error',
-                'text' => 'something went wrong, please try again!'
-            ];
-        }
-
-        $category_en = null;
-        if ($request->category_en) {
-            // store en version
-            $category_en = $category->categoryTrans()->create([
-                'category' => $request->category_en,
-                'description' => $request->description_en,
-                'notes' => $request->notes_en,
-                'lang_id' => $en_id,
+            //store data in category
+            $category = Category::forceCreate([
+                'menu_id' => $menu->id,
+                'parent_id' => $main_category->id,
             ]);
+
+        } else {
+
+            //store data in category
+            $category = Category::forceCreate([
+                'menu_id' => $request->menu_id,
+                'parent_id' => 0,
+            ]);
+
         }
+
+        // store en version
+        $category_en = $category->categoryTrans()->create([
+            'category' => $request->category_en,
+            'description' => $request->description_en,
+            'notes' => $request->notes_en,
+            'lang_id' => $en_id,
+        ]);
 
         // check saving status
         if (!$category_en) {
@@ -152,9 +143,10 @@ class CategoriesController extends Controller
             ];
         }
 
-        $category_ar = null;
         // store ar version
-        // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
+        // because it is not required, we check if there is ar in request,
+        // then save it, else {no problem, not required}
+        $category_ar = null;
         if ($request->category_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
@@ -165,22 +157,13 @@ class CategoriesController extends Controller
                 'notes' => $request->notes_ar,
                 'lang_id' => $ar_id,
             ]);
-
-            // check save status
-            if (!$category_ar) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong while saving AR, please try again!'
-                ];
-            }
         }
 
         // check saving success
         return [
             'status' => 'success',
             'title' => 'success',
-            'text' => 'Data inserted successfully done',
+            'text' => 'category was successfully created!',
         ];
     }
 
@@ -220,7 +203,20 @@ class CategoriesController extends Controller
             $menu->menu_translated = $menu_translated;
         }
 
-        return view('admin.pages.categories.edit-category', compact('category', 'menus'));
+        $main_categories = Category::where('parent_id', 0)->get();
+
+        //append translated category to all main categories
+        foreach ($main_categories as $key => $main_category) {
+
+            $main_category->trans = $main_category->translate();
+
+            if ($category->id == $main_category->id) {
+
+                unset($main_categories[$key]);
+            }
+        }
+
+        return view('admin.pages.categories.edit-category', compact('category', 'menus', 'main_categories'));
     }
 
     /**
@@ -233,11 +229,7 @@ class CategoriesController extends Controller
         // validation category
         $validation_rules = [
             'category_en' => 'required',
-            'category_ar' => 'required',
             'description_en' => 'required',
-            'description_ar' => 'required',
-            'notes_en' => 'required',
-            'notes_ar' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_rules);
@@ -262,67 +254,54 @@ class CategoriesController extends Controller
             ];
         }
 
-        // get menu from request
-        $menu_id = $request->menu_id;
 
-        //find menu by id
-        $menu = Menu::find($menu_id);
 
-        //check if no menu
-        if (!$menu) {
+        $main_category = null;
+        $menu = null;
+        if ($request->category_type == 'sub') {
+
+            $main_category = Category::find($request->main_category_id);
+            $menu = $main_category->menu;
+
+            $category->parent_id = $main_category->id;
+            $category->menu_id = $menu->id;
+            $category->save();
+
+        } else {
+
+            $category->parent_id = 0;
+            $category->menu_id = $request->menu_id;
+            $category->save();
+        }
+
+        $category_en = $category->translate('en');
+
+        $category_en->category = $request->category_en;
+        $category_en->description = $request->description_en;
+        $category_en->notes = $request->notes_en;
+
+        // check save status
+        if (!$category_en->save()) {
             return [
                 'status' => 'error',
                 'title' => 'Error',
-                'text' => 'There is no menu with such id!'
+                'text' => 'something went wrong while updating EN, please try again!'
             ];
         }
 
-        //store menu_id in category
-        $category->menu_id = $menu_id;
+        $category_ar = $category->translate('ar');
 
-        //check save success
-        if ($category->save()) {
+        $category_ar->category = $request->category_ar;
+        $category_ar->description = $request->description_ar;
+        $category_ar->notes = $request->notes_ar;
+        $category_ar->save();
 
-            $category_en = $category->translate('en');
-
-            $category_en->category = $request->category_en;
-            $category_en->description = $request->description_en;
-            $category_en->notes = $request->notes_en;
-
-            // check save status
-            if (!$category_en->save()) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong while updating EN, please try again!'
-                ];
-            }
-
-            if ($request->category_ar) {
-
-                $category_ar = $category->translate('ar');
-
-                $category_ar->category = $request->category_ar;
-                $category_ar->description = $request->description_ar;
-                $category_ar->notes = $request->notes_ar;
-
-                // check save status
-                if (!$category_ar->save()) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while updating AR, please try again!'
-                    ];
-                }
-            }
-
-            // check save success
-            return [
-                'status' => 'success',
-                'title' => 'success',
-                'text' => 'Data updated successfully done',
-            ];
-        }
+        // check save success
+        return [
+            'status' => 'success',
+            'title' => 'success',
+            'text' => 'category was updated successfully!',
+        ];
     }
 
     /**

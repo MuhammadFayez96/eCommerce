@@ -35,8 +35,7 @@
                         <thead>
                         <tr style="color: black; font-size: medium;">
                             <th class="text-center">category</th>
-                            <th class="text-center">description</th>
-                            <th class="text-center">notes</th>
+                            <th class="text-center">type</th>
                             <th class="text-center">operations</th>
                         </tr>
                         </thead>
@@ -44,8 +43,15 @@
                         @foreach($categories as $category)
                             <tr>
                                 <td class="text-center">{{$category->category_translated->category}}</td>
-                                <td class="text-center">{{$category->category_translated->description}}</td>
-                                <td class="text-center">{{$category->category_translated->notes}}</td>
+                                <td class="text-center">
+                                    {{$category->isMain() ? 'Main' : 'Sub from :'}}
+
+                                    @if(!$category->isMain())
+                                        <a href="{{url('categories/get-update/'.$category->main->id)}}" style="color: red;">
+                                            {{ $category->main->translate()->category }}
+                                        </a>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     <a href="{{url('categories/get-update/'.$category->id)}}" class="btn btn-warning btn-sm">
                                         <li class="fa fa-pencil"> Edit</li>
@@ -74,4 +80,3 @@
 @section('modals')
     @include('admin.pages.categories.modals.delete-category')
 @endsection
-

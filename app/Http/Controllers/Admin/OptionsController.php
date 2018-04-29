@@ -31,7 +31,7 @@ class OptionsController extends Controller
 
             // add the translated option as a key => value to main option object
             // key is option_translated and the value id $option_translated
-            $option->option_translated = $option_translated;
+            $option->trans = $option_translated;
 
             //find optionValue by option_id
             $optionValues = $option->optionValues;
@@ -45,7 +45,7 @@ class OptionsController extends Controller
             // key is option_value_translated and the value id $option_value
             $option->option_values = $optionValues;
         }
-
+        
         return view('admin.pages.options.index', compact('options'));
     }
 

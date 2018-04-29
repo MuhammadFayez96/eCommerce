@@ -58,9 +58,9 @@ class AddressesController extends Controller
      */
     public function createNewAddress(Request $request)
     {
+
         // validation countries
         $validation_countries = [
-            'country_code' => 'required',
             'country_name_en' => 'required',
             'city_name_en' => 'required',
         ];
@@ -79,13 +79,15 @@ class AddressesController extends Controller
         // choose one language to be the default one, let's make EN is the default
         // store master country
         // store the country in en
+
         $en_id = Language::where('lang_code', 'en')->first()->id;
+        $ar_id = Language::where('lang_code', 'ar')->first()->id;
+
 
         $country = Country::forceCreate([
             'country_code' => $request->country_code,
         ]);
 
-//        dd($country);
         // check saving success
         if (!$country) {
             return [
@@ -101,111 +103,75 @@ class AddressesController extends Controller
             'lang_id' => $en_id
         ]);
 
-        // check saving status
-        if (!$country_en) {
-            return [
-                'status' => 'error',
-                'title' => 'Error',
-                'text' => 'something went wrong while saving EN country, please try again!'
-            ];
-        }
-
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
         if ($request->country_name_ar) {
-
-            $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
             $country_ar = $country->countyTrans()->create([
                 'country' => $request->country_name_ar,
                 'lang_id' => $ar_id
             ]);
-
-            // check saving status
-            if (!$country_ar) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong while saving AR country, please try again!'
-                ];
-            }
         }
 
         // check if country save
-        if ($country) {
-
-            $country_id = $country->id;
-            $country = Country::find($country_id);
-
-            // check if no country
-            if (!$country) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'There is no country with such id!'
-                ];
-            }
-
-            // save master city
-            $city = City::forceCreate([
-                'country_id' => $country_id,
-            ]);
-
-
-            $city_en = null;
-            if ($request->city_name_en) {
-
-                $city_en = $city->cityTrans()->create([
-                    'city' => $request->city_name_en,
-                    'lang_id' => $en_id
-                ]);
-            }
-
-            // check saving status
-            if (!$city_en) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong while saving EN, please try again!'
-                ];
-            }
-
-            // store ar version
-            // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-            $city_ar = null;
-            if ($request->city_name_ar) {
-
-                $ar_id = Language::where('lang_code', 'ar')->first()->id;
-
-                $city_ar = $city->cityTrans()->create([
-                    'name' => $request->city_name_ar,
-                    'lang_id' => $ar_id
-                ]);
-
-                // check saving status
-                if (!$city_ar) {
-                    return [
-                        'status' => false,
-                        'data' => null,
-                        'msg' => 'something went wrong while saving AR, please try again!'
-                    ];
-                }
-            }
-
-            // check success status
+        if (!$country) {
+            //check save status
             return [
-                'status' => 'success',
-                'title' => 'successfully',
-                'text' => 'Data inserted successfully done',
+                'status' => 'error',
+                'title' => 'Error',
+                'msg' => 'something went wrong, please try again!'
             ];
         }
 
-        //check save status
+        $country_id = $country->id;
+
+
+        foreach ($request->city_name_en as $key => $city_name_en) {
+
+            if ($city_name_en) {
+
+                // save master city
+                $city = City::forceCreate([
+                    'country_id' => $country_id,
+                ]);
+
+                $city_en = $city->cityTrans()->create([
+                    'city' => $city_name_en,
+                    'lang_id' => $en_id
+                ]);
+
+                if ($request->city_name_ar[$key]) {
+
+                    $city_ar = $city->cityTrans()->create([
+                        'city' => $request->city_name_ar[$key],
+                        'lang_id' => $ar_id
+                    ]);
+                }
+            }
+        }
+
+        // check success status
         return [
-            'status' => 'error',
-            'title' => 'Error',
-            'msg' => 'something went wrong, please try again!'
+            'status' => 'success',
+            'title' => 'successfully',
+            'text' => 'Data inserted successfully done',
         ];
+    }
+
+    /**
+    * get add new city template
+    */
+    public function getAddCitiesTemplate()
+    {
+        return view('admin.pages.addresses.templates.add-country.add-city')->render();
+    }
+
+    /*
+    * get add new city template - for edit
+    */
+    public function getAddCitiesTemplateInEdit()
+    {
+        return view('admin.pages.addresses.templates.add-country.add-city-in-edit')->render();
     }
 
 
@@ -217,16 +183,21 @@ class AddressesController extends Controller
     {
         //get country by id
         $country = Country::find($id);
-        //get country details
-        $country_details = $country->translate();
+        //get country en
+        $country->en = $country->translate('en');
+        //get country ar
+        $country->ar = $country->translate('ar');
         //get country id
-        $country_id = $country->id;
-        //get city where country_id = $country_id
-        $city = City::where('country_id', $country_id)->first();
-        //get city_details
-        $city_details = $city->translate();
 
-        return view('admin.pages.addresses.edit-address', compact('country', 'country_details', 'city_details'));
+        $country->cities;
+
+        foreach ($country->cities as $city) {
+
+            $city->en = $city->translate('en');
+            $city->ar = $city->translate('ar');
+        }
+
+        return view('admin.pages.addresses.edit-address', compact('country'));
     }
 
     /**
@@ -234,13 +205,14 @@ class AddressesController extends Controller
      * @param Request $request
      * @return array
      */
-    public function updateAddress($id, Request $request)
+    public function updateAddress(Request $request)
     {
+
         // validation countries
         $validation_countries = [
             'country_code' => 'required',
             'country_name_en' => 'required',
-            'city_name_en' => 'required',
+            'cities_names_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_countries);
@@ -255,7 +227,7 @@ class AddressesController extends Controller
         }
 
         //find country by id
-        $country = Country::find($id);
+        $country = Country::find($request->country_id);
 
         //check if no country
         if (!$country) {
@@ -266,89 +238,103 @@ class AddressesController extends Controller
             ];
         }
 
-
         $country->country_code = $request->country_code;
 
-        //c heck save success status
         if ($country->save()) {
 
-            $country_en = $country->translate(1);
-            $country_en->country = $request->country_name_en;
+            $en_id = Language::where('lang_code', 'en')->first()->id;
+            $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
-            // check saving success
-            if (!$country_en->save()) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong while updating EN, please try again!'
-                ];
-            }
+            $country->translate('en')->update([
+                'country' => $request->country_name_en
+            ]);
 
-            // do the same thing for AR
             if ($request->country_name_ar) {
 
-                $country_ar = $country->translate(2);
-                $country_ar->country = $request->country_name_ar;
+                if ($country->translate('ar')) {
 
-                if (!$country_ar->save()) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while updating AR, please try again!'
-                    ];
+                    $country->translate('ar')->update([
+                        'country' => $request->country_name_ar
+                    ]);
+
+                } else {
+
+                    $country->countyTrans()->create([
+                        'country' => $request->country_name_ar,
+                        'country_id' => $request->country_id,
+                        'lang_id' => $ar_id
+                    ]);
                 }
+            } else {
+
+                $country->translate('ar') ? $country->translate('ar')->delete() : '';
             }
 
-            $country_id = $country->id;
-            $city = City::where('country_id', $country_id)->first();
 
-            //check if no city
-            if (!$city) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'There is no city with this id!'
-                ];
-            }
+            $cities_name_en = $request->cities_names_en;
+            $cities_name_ar = $request->cities_names_ar;
 
-            //c heck save success status
-            if ($city->save()) {
+            foreach ($cities_name_en as $key => $city_en) {
 
-                $city_en = $city->translate(1);
-                $city_en->city = $request->city_name_en;
+                if (!$city_en) continue;
 
-                // check saving success
-                if (!$city_en->save()) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while updating EN, please try again!'
-                    ];
-                }
+                if (array_key_exists(1, $city_en)) {
 
-                // do the same thing for AR
-                if ($request->city_name_ar) {
+                    $city = City::find($city_en[1]);
 
-                    $city_ar = $city->translate(2);
-                    $city_ar->city = $request->city_name_ar;
+                    $city->cityTrans()->delete();
 
-                    if (!$city_ar->save()) {
-                        return [
-                            'status' => 'error',
-                            'title' => 'Error',
-                            'text' => 'something went wrong while updating AR, please try again!'
-                        ];
+                    $city->cityTrans()->create([
+                        'city' => $city_en[0],
+                        'lang_id' => $en_id,
+                        'city_id' => $city->id
+                    ]);
+
+                    if (array_key_exists($key, $cities_name_ar)) {
+
+                        $city->cityTrans()->create([
+                            'city' => $cities_name_ar[$key][0],
+                            'lang_id' => $ar_id,
+                            'city_id' => $city->id
+                        ]);
                     }
+
+                    continue;
                 }
 
-                // check saving success
-                return [
-                    'status' => 'success',
-                    'title', 'success',
-                    'text' => 'Data updated successfully done',
-                ];
+                $city = City::forceCreate([
+                    'country_id' => $country->id,
+                ]);
+
+                $city->cityTrans()->create([
+                    'city' => $city_en[0],
+                    'lang_id' => $en_id
+                ]);
+
+                if (array_key_exists($key, $cities_name_ar)) {
+
+                    $city->cityTrans()->create([
+                        'city' => $cities_name_ar[$key][0],
+                        'lang_id' => $ar_id
+                    ]);
+                }
             }
         }
+
+        // check saving success
+        return [
+            'status' => 'success',
+            'title', 'success',
+            'text' => 'Data updated successfully done',
+        ];
+    }
+
+    /**
+    * delete city
+    */
+    public function deleteCity($id)
+    {
+        return City::find($id)->delete() ? ['status' => true] : ['status' => false];
     }
 
     /**

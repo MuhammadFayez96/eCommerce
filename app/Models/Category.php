@@ -65,4 +65,28 @@ class Category extends Model
 
         return $this->categoryTrans()->where('lang_id', $lang_id)->first();
     }
+
+    /**
+    * get main category
+    */
+    public function main()
+    {
+        return $this->belongsTo('App\Models\Category', 'parent_id');
+    }
+
+    /**
+    * get sub categories
+    */
+    public function subs()
+    {
+        return $this->hasMany('App\Models\Category', 'parent_id');
+    }
+
+    /**
+    * check if main category
+    */
+    public function isMain()
+    {
+        return $this->parent_id == 0;
+    }
 }

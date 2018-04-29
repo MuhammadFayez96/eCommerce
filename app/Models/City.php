@@ -22,6 +22,7 @@ class City extends Model
      */
     protected $dates = ['deleted_at'];
 
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
