@@ -452,8 +452,6 @@ function ShowProductSection()
 {
     var product_type = [];
 
-    console.log($(this).find(':selected'));
-
     var products = $('select[name="products[]"] option:selected');
 
         products.each(function()
@@ -489,7 +487,6 @@ function ShowProductSection()
                 }
             }
         }
-
 }
 //------------------------------------------------------//
                  //end of function

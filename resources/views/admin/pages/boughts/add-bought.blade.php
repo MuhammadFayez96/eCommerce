@@ -142,7 +142,7 @@
                                         <div class="col-10">
                                             <input class="form-control" type="text" id="price"
                                                    name="price[]"
-                                                   placeholder="price"><span>error</span>
+                                                   placeholder="price">
                                         </div>
                                     </div>
                                     <!-- end price div -->
