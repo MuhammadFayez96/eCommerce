@@ -8,10 +8,10 @@
         </div>
     </div>
     <div class="form-group col-sm-5">
-        <label for="city" class="col-2 col-form-label ">City name in AR</label>
+        <label for="city" class="col-2 col-form-label ">اسم المدينة باللغة العربيه</label>
         <div class="col-10">
             <input class="form-control required" type="text" name="city_name_ar[]"
-                   placeholder="مثال: طنطا">
+                   placeholder='مثلا: طنطا'>
         </div>
     </div>
     <div class="col-sm-2">

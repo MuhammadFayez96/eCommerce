@@ -45,7 +45,7 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('get-create', 'RolesController@getCreateNewRole')->name('admin.roles.getCreateNewRole');
         Route::post('create', 'RolesController@createNewRole')->name('admin.roles.createNewRole');
         Route::get('get-update/{id}', 'RolesController@getUpdateRole')->name('admin.roles.getUpdateRole');
-        Route::post('post-update/{id}', 'RolesController@UpdateRole')->name('admin.roles.updateRole');
+        Route::post('post-update', 'RolesController@UpdateRole')->name('admin.roles.updateRole');
         Route::delete('delete/{id}', 'RolesController@deleteRole')->name('admin.roles.deleteRole');
     });
 
@@ -55,7 +55,7 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('get-create', 'MenusController@getCreateNewMenu')->name('admin.menus.getCreateNewMenu');
         Route::post('create', 'MenusController@createNewMenu')->name('admin.menus.createNewMenu');
         Route::get('get-update/{id}', 'MenusController@getUpdateMenu')->name('admin.menus.getUpdateMenu');
-        Route::post('post-update/{id}', 'MenusController@UpdateMenu')->name('admin.menus.updateMenu');
+        Route::post('post-update', 'MenusController@UpdateMenu')->name('admin.menus.updateMenu');
         Route::delete('delete/{id}', 'MenusController@deleteMenu')->name('admin.menus.deleteMenu');
     });
 

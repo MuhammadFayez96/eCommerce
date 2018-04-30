@@ -1,5 +1,17 @@
 @extends('admin.master')
 
+@section('styles')
+
+<style>
+
+input[name='city_name_ar[]'],  input[name='country_name_ar']{
+    text-align: right;
+}
+
+</style>
+
+@endsection
+
 @section('content-header')
     <section class="content-header">
         <nav aria-label="breadcrumb">
@@ -39,7 +51,7 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="country_name_ar" class="col-2 col-form-label ">Country name in AR </label>
+                            <label for="country_name_ar" class="col-2 col-form-label" style="float: right;">اسم الدولة باللغة العربيه</label>
                             <div class="col-10">
                                 <input class="form-control required" type="text" name="country_name_ar" value="{{$country->ar->country}}"
                                        placeholder="مثلا: مصر">
@@ -89,11 +101,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-5">
-                                    <label for="city" class="col-2 col-form-label ">City name in AR</label>
+                                    <label for="city" class="col-2 col-form-label" style="float: right;">اسم المدينة باللغة العربيه</label>
                                     <div class="col-10">
                                         <input class="form-control required" type="text"  name="city_name_ar[]" value="{{$city->ar ? $city->ar->city : ''}}"
                                         data-cityid={{$city->id}}
-                                               placeholder="مثلا:طنطا ">
+                                               placeholder='مثلا: طنطا'>
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
@@ -116,7 +128,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-5">
-                                    <label for="city" class="col-2 col-form-label ">City name in AR</label>
+                                    <label for="city" class="col-2 col-form-label" style="float: right;">اسم المدينة باللغة العربيه</label>
                                     <div class="col-10">
                                         <input class="form-control required" type="text"  name="city_name_ar[]"
                                                placeholder="مثلا:طنطا ">

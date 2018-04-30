@@ -30,7 +30,7 @@ class MenuTranslation extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function menu()
+    public function masterMenu()
     {
         return $this->belongsTo('App\Models\Menu', 'menu_id');
     }

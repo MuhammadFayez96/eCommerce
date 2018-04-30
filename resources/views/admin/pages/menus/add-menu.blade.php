@@ -26,35 +26,58 @@
                 {!! csrf_field() !!}
                 <div class="modal-body">
                     <div class="row">
-                        <div class="form-group col-sm-12">
-                            <label for="menu" class="col-2 col-form-label ">Menu</label>
+                        <div class="form-group col-sm-6">
+                            <label for="menu" class="col-2 col-form-label ">Menu Name EN</label>
                             <div class="col-10">
-                                <input class="form-control required" type="text" id="menu" name="menu_en"
+                                <input class="form-control required" type="text" name="menu_en"
                                        placeholder="EX: Electronics">
                             </div>
                         </div>
-
-                        <div class="form-group col-sm-12">
-                            <label for="description" class="col-2 col-form-label ">Description</label>
+                        <div class="form-group col-sm-6">
+                            <label for="menu" class="col-2 col-form-label" style="float: right;">اسم القائمة باللغة العربيه</label>
                             <div class="col-10">
-                                    <textarea class="form-control" rows="3" id="description" name="menu_description_en"
-                                              placeholder="any thing"></textarea>
+                                <input class="form-control required" type="text" name="menu_ar"
+                                style="direction: rtl;"
+                                       placeholder="مثلا: الالكترونيات">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-12">
-                            <label for="notes" class="col-2 col-form-label">Notes</label>
+                            <label for="description" class="col-2 col-form-label ">Description EN</label>
+                            <div class="col-10">
+                                    <textarea class="form-control" rows="3" id="description" name="menu_description_en"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label for="description" class="col-2 col-form-label" style="float: right;">الوصف باللغة العربيه</label>
+                            <div class="col-10">
+                                    <textarea class="form-control" rows="3" name="menu_description_ar"
+                                    style="direction: rtl;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label for="notes" class="col-2 col-form-label">Notes EN</label>
                             <div class="col-10">
                                 <div class="col-10">
-                                    <textarea class="form-control required" rows="5" id="notes" name="menu_notes_en"
-                                              placeholder="any thing"></textarea>
+                                    <textarea class="form-control required" rows="5" name="menu_notes_en"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label for="notes" class="col-2 col-form-label" style="float: right;"> الملحوظات باللغة العربيه</label>
+                            <div class="col-10">
+                                <div class="col-10">
+                                    <textarea class="form-control required" rows="5" name="menu_notes_en"
+                                    style="direction: rtl;"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn-submit btn btn-primary btn-sm btn-flat">
                             Save <span class="glyphicon glyphicon-save"> </span>
                         </button>

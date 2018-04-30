@@ -35,8 +35,6 @@
                         <thead>
                         <tr style="color: black; font-size: medium;">
                             <th class="text-center">menu</th>
-                            <th class="text-center">description</th>
-                            <th class="text-center">notes</th>
                             <th class="text-center">operations</th>
                         </tr>
                         </thead>
@@ -44,8 +42,6 @@
                         @foreach($menus as $menu)
                             <tr>
                                 <td class="text-center">{{$menu->menu_translated->menu}}</td>
-                                <td class="text-center">{{$menu->menu_translated->description}}</td>
-                                <td class="text-center">{{$menu->menu_translated->notes}}</td>
                                 <td class="text-center">
                                     <a href="{{url('menus/get-update/'.$menu->id)}}" class="btn btn-warning btn-sm">
                                         <li class="fa fa-pencil"> Edit</li>
@@ -74,4 +70,3 @@
 @section('modals')
     @include('admin.pages.menus.modals.delete-menu')
 @endsection
-

@@ -33,19 +33,17 @@
                         <thead>
                         <tr style="color: black; font-size: medium;">
                             <th class="text-center">role</th>
-                            <th class="text-center">display name</th>
-                            <th class="text-center">description</th>
+                            <th class="text-center">display name EN</th>
+                            <th class="text-center">display name AR</th>
                             <th class="text-center">notes</th>
-                            <th class="text-center">operations</th>
                         </tr>
                         </thead>
                         <tbody class="table-hover">
                         @foreach($roles as $role)
                             <tr>
                                 <td class="text-center">{{$role->role}}</td>
-                                <td class="text-center">{{$role->role_translated->displayName}}</td>
-                                <td class="text-center">{{$role->role_translated->description}}</td>
-                                <td class="text-center">{{$role->role_translated->notes}}</td>
+                                <td class="text-center">{{$role->display_name_en}}</td>
+                                <td class="text-center">{{$role->display_name_ar}}</td>
                                 <td class="text-center">
                                     <a href="{{url('roles/get-update/'.$role->id)}}" class="btn btn-warning btn-sm">
                                         <li class="fa fa-pencil"> Edit</li>
@@ -74,4 +72,3 @@
 @section('modals')
     @include('admin.pages.roles.modals.delete-role')
 @endsection
-

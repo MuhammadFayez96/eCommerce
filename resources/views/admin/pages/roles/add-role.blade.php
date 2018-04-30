@@ -1,5 +1,6 @@
 @extends('admin.master')
 
+
 @section('content-header')
     <section class="content-header">
         <nav aria-label="breadcrumb">
@@ -27,35 +28,48 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="role" class="col-2 col-form-label ">role</label>
+                            <label for="role" class="col-2 col-form-label ">Role Name</label>
                             <div class="col-10">
                                 <input class="form-control required" type="text" id="role" name="role"
-                                       placeholder="EX: Egypt">
+                                       placeholder="EX: Admin">
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row">
+
                         <div class="form-group col-sm-6">
-                            <label for="displayName" class="col-2 col-form-label ">Display Name</label>
+                            <label for="role" class="col-2 col-form-label ">Display Name</label>
+                            <div class="col-10">
+                                <input class="form-control required" type="text" id="role" name="role_displayName_en"
+                                       placeholder="EX: Administrator">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="displayName" class="col-2 col-form-label" style="float: right;">اسم العرض</label>
                             <div class="col-10">
                                 <input class="form-control required" type="text" id="displayName"
-                                       name="role_displayName_en"
-                                       placeholder="EX: admin">
+                                       name="role_displayName_ar"
+                                       style="direction: rtl"
+                                       placeholder="مثلا: مدير النظام">
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-sm-12">
+                        <!-- <div class="form-group col-sm-12">
                             <label for="description" class="col-2 col-form-label ">Description</label>
                             <div class="col-10">
                                     <textarea class="form-control " rows="3" id="description" name="role_description_en"
                                               placeholder="any thing"></textarea>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group col-sm-12">
                             <label for="notes" class="col-2 col-form-label">Notes</label>
                             <div class="col-10">
-                                    <textarea class="form-control required" rows="5" id="notes" name="role_notes_en"
+                                    <textarea class="form-control required" rows="5" id="notes" name="notes"
                                               placeholder="any thing"></textarea>
                             </div>
                         </div>

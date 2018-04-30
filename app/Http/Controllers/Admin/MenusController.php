@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\Menu;
+use App\Models\MenuTranslation;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,11 +26,9 @@ class MenusController extends Controller
         $menus = Menu::all();
         // append translated menu to all menus
         foreach ($menus as $menu) {
+
             // get menu details
-            $menu_translated = $menu->translate();
-            // add the translated menu as a key => value to main menu object
-            // key is menu_translated and the value id $menu_translated
-            $menu->menu_translated = $menu_translated;
+            $menu->menu_translated = $menu->translate();
         }
 
         return view('admin.pages.menus.index', compact('menus'));
@@ -49,8 +48,6 @@ class MenusController extends Controller
         // validation menus
         $validation_menus = [
             'menu_en' => 'required',
-            'menu_description_en' => 'required',
-            'menu_notes_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_menus);
@@ -81,30 +78,18 @@ class MenusController extends Controller
             ];
         }
 
-        $menu_en = null;
-        if ($request->menu_en && $request->menu_description_en && $request->menu_notes_en) {
-            // store en version
-            $menu_en = $menu->menuTrans()->create([
-                'menu' => $request->menu_en,
-                'description' => $request->menu_description_en,
-                'notes' => $request->menu_notes_en,
-                'lang_id' => $en_id,
-            ]);
-        }
+        // store en version
+        $menu_en = $menu->menuTrans()->create([
+            'menu' => $request->menu_en,
+            'description' => $request->menu_description_en,
+            'notes' => $request->menu_notes_en,
+            'lang_id' => $en_id,
+        ]);
 
-        // check saving status
-        if (!$menu_en) {
-            return [
-                'status' => 'error',
-                'title' => 'Error',
-                'text' => 'something went wrong while saving EN, please try again!'
-            ];
-        }
-
-        $menu_ar = null;
         // store ar version
         // because it is not required, we check if there is ar in request, then save it, else {no problem, not required}
-        if ($request->menu_ar && $request->menu_description_ar && $request->menu_notes_ar) {
+        $menu_ar = null;
+        if ($request->menu_ar) {
 
             $ar_id = Language::where('lang_code', 'ar')->first()->id;
 
@@ -114,22 +99,13 @@ class MenusController extends Controller
                 'notes' => $request->menu_notes_ar,
                 'lang_id' => $ar_id,
             ]);
-
-            // check save status
-            if (!$menu_ar) {
-                return [
-                    'status' => 'error',
-                    'title' => 'Error',
-                    'text' => 'something went wrong while saving AR, please try again!'
-                ];
-            }
         }
 
         // check saving success
         return [
             'status' => 'success',
             'title' => 'success',
-            'text' => 'Data inserted successfully done',
+            'text' => 'Menu had been created successfully',
         ];
     }
 
@@ -142,12 +118,10 @@ class MenusController extends Controller
         //find menu by id
         $menu = Menu::find($id);
         //get menu details
-        $menu_translated = $menu->translate();
-        // add the translated menu as a key => value to main menu object
-        // key is menu_translated and the value id $menu_translated
-        $menu->menu_translated = $menu_translated;
+        $menu->en = $menu->translate('en');
+        $menu->ar = $menu->translate('ar');
 
-        return view('admin.pages.menus.edit-menu', compact('menu', 'menu_translated'));
+        return view('admin.pages.menus.edit-menu', compact('menu'));
     }
 
     /**
@@ -155,13 +129,11 @@ class MenusController extends Controller
      * @param Request $request
      * @return array
      */
-    public function updateMenu($id, Request $request)
+    public function updateMenu(Request $request)
     {
         // validation menus
         $validation_menus = [
             'menu_en' => 'required',
-            'menu_description_en' => 'required',
-            'menu_notes_en' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_menus);
@@ -174,22 +146,17 @@ class MenusController extends Controller
                 'text' => 'validation error'
             ];
         }
-        //search menu by id
-        $menu = Menu::find($id);
 
-        //check if no option
-        if (!$menu) {
-            return [
-                'status' => 'error',
-                'title' => 'Error',
-                'text' => 'There is no menu with this id!'
-            ];
-        }
+        $menu_id = $request->id;
+        //search menu by id
+        $menu = Menu::find($menu_id);
 
         //check save success
-        if ($menu->save()) {
+        if ($menu) {
 
-            $menu_en = $menu->translate(1);
+            $en_id = Language::where('lang_code', 'en')->first()->id;
+
+            $menu_en = $menu->translate('en');
             $menu_en->menu = $request->menu_en;
             $menu_en->description = $request->menu_description_en;
             $menu_en->notes = $request->menu_notes_en;
@@ -203,29 +170,39 @@ class MenusController extends Controller
                 ];
             }
 
-            if ($request->menu_ar && $request->menu_description_ar && $request->menu_notes_ar) {
+            $menu_ar = $menu->translate('ar');
 
-                $menu_ar = $menu->translate(2);
+            if ($menu_ar) {
+
                 $menu_ar->menu = $request->menu_ar;
                 $menu_ar->description = $request->menu_description_ar;
                 $menu_ar->notes = $request->menu_notes_ar;
 
+                $menu_ar->save();
 
-                // check save status
-                if (!$menu_ar->save()) {
-                    return [
-                        'status' => 'error',
-                        'title' => 'Error',
-                        'text' => 'something went wrong while updating AR, please try again!'
-                    ];
+            } else {
+
+                if ($request->menu_ar) {
+
+                    $ar_id = Language::where('lang_code', 'ar')->first()->id;
+                    $menu_ar = new MenuTranslation;
+
+                    $menu_ar->lang_id = $ar_id;
+                    $menu_ar->menu_id = $menu->id;
+                    $menu_ar->menu = $request->menu_ar;
+                    $menu_ar->description = $request->menu_description_ar;
+                    $menu_ar->notes = $request->menu_notes_ar;
+
+                    $menu_ar->save();
                 }
+
             }
 
             // check saving success
             return [
                 'status' => 'success',
                 'title' => 'success',
-                'text' => 'Data updated successfully done',
+                'text' => "Menu\'s data was updated successfully",
             ];
         }
     }
