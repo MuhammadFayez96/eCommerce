@@ -308,13 +308,7 @@ $(document).on('click','.remove-product-option',function (){
     $(this).closest('.addProductOption').remove();
 });
 
-
-
 //end of it//
-
-
-
-
 
 
 
@@ -339,45 +333,33 @@ $(document).on('click', '.add_form', function () {
 });
 
 
-// function Product() {
-//     var selectBox = document.getElementById('type');
-//     var type = selectBox.options[selectBox.selectedIndex].value;
-//     if (type == 'normal') {
-//         document.getElementById('normal-product').style.visibility = 'visible';
-//         document.getElementById('option-product').style.visibility = 'hidden';
-//     } else if (type == 'option') {
-//         document.getElementById('normal-product').style.visibility = 'hidden';
-//         document.getElementById('option-product').style.visibility = 'visible';
-//     } else {
-//         document.getElementById('option-product').style.visibility = 'hidden';
-//     }
-//
-//     return false;
-// }
 
+//-------------------------------------------------------------//
+     // cache and remainder radio button section in bought page
+//------------------------------------------------------------//
 
-// cash
-function kash() {
-    var kashRadio = document.getElementById('kashr');
-    var type = $("#kashr").prop("checked", true);
+//-------------------Cache function --------------------//
+function Cache() {
+    var cacheRadio = document.getElementById('cache');
+    var type = $("#cache").prop("checked", true);
     if (type = true) {
-        $('.remain').attr("disabled", true);
+        $('#remain').attr("disabled", true);
     }
 }
 
-//remaining
-function ba2y() {
-    var ba2yRadio = document.getElementById('ba2yr');
-    var type = $("#ba2yr").prop("checked", true);
+//-------------------Remainder function --------------------//
+function Remainder() {
+    var remainderRadio = document.getElementById('remainder');
+    var type = $("#remainder").prop("checked", true);
     if (type = true) {
-        $('.remain').removeAttr('disabled');
+        $('#remain').removeAttr('disabled');
     }
 }
 
 $(document).on('change', '#total', function () {
     cal();
 });
-//
+
 // function cal() {
 //     var amount =$('input[name="amount[]"]').val();
 //     var cost =$('input[name="cost[]"]').val();
@@ -386,13 +368,16 @@ $(document).on('change', '#total', function () {
 //     console.log(total_cost);
 //     // $('#total_price').val(total_cost);
 // }
+//------------------------------------------------------//
+                 //end of function
+//------------------------------------------------------//
 
 
-
-//
-$(document).on('click','.add_fields',function(){
+//--------------------------------------------------//
+     // add option section in bought page
+//--------------------------------------------------//
+$(document).on('click','.add_option_section',function(){
     var html='';
-
     $.ajax({
         url: $(this).data('url'),
         method: 'GET',
@@ -400,22 +385,39 @@ $(document).on('click','.add_fields',function(){
             html += result;
             $('.addOptionWrapper').append(html);
 
-            $(document).ready(function () {
-                $('.selectpicker').selectpicker();
-            });
+            $('.selectpicker').selectpicker();
+        }
+    });
+});
+
+$(document).on('click','.add_option_section2',function(){
+    var html='';
+
+    $.ajax({
+        url: $(this).data('url'),
+        method: 'GET',
+        success: function (result) {
+            html += result;
+            $('.addOptionWrapper2').append(html);
+
+            $('.selectpicker').selectpicker();
 
         }
     });
-
 });
 
-$(document).on('click','.remove_fields',function(){
-    var v =$(this).closest('.addOption').remove();
-    console.log(v);
+//-------------------Remove section --------------------//
+$(document).on('click','.remove_option_section',function(){
+    $(this).closest('.addOption').remove();
 });
-// end
+//------------------------------------------------------//
+                 //end of function
+//------------------------------------------------------//
 
-//
+
+//--------------------------------------------------//
+     // add prodcut section in bought page
+//--------------------------------------------------//
 $(document).on('click','.add_product_form',function(){
     var html = '';
 
@@ -425,27 +427,101 @@ $(document).on('click','.add_product_form',function(){
         success: function (result) {
             html += result;
             $('.boughtsWrapper').append(html);
+
+            $('.selectpicker').selectpicker();
         }
     });
 });
 
+//-------------------Remove section --------------------//
 $(document).on('click','.remove_product_form',function(){
     $(this).closest('.bought').remove();
 });
-// end
+//------------------------------------------------------//
+                 //end of function
+//------------------------------------------------------//
 
 
-function showComponent()
+
+//------------------------------------------------------//
+    // show component of product section if product is
+    // normal or option
+//------------------------------------------------------//
+
+function ShowProductSection()
 {
-    var product_type = $("#product").find(':selected').attr('data-product-type');
+    var product_type = [];
 
-    if (product_type == 'normal'){
-        $(".productNormalWrapper").removeClass("hidden");
-        $(".ProductOptionWrapper").addClass("hidden");
+    var products = $('select[name="products[]"] option:selected');
 
-    }else{
-        $(".ProductOptionWrapper").removeClass("hidden");
-        $(".productNormalWrapper").addClass("hidden");
+        products.each(function()
+        {
+            var type = $(this).data('product-type');
+            product_type.push(type);
+        });
 
-    }
+        for (var i = 0; i < product_type.length; i++)
+         {
+            // console.log();
+            if(product_type.length == 1)
+            {
+                if (product_type[i] == 'normal')
+                {
+                    $(".productNormalWrapper").removeClass("hidden");
+                    $(".productOptionWrapper").addClass("hidden");
+                }else if (product_type[i] == 'option')
+                {
+                    $(".productOptionWrapper").removeClass("hidden");
+                    $(".productNormalWrapper").addClass("hidden");
+                }
+            }else
+            {
+                if (product_type[i] == 'normal')
+                {
+                    $(".ProductNormalWrapper").removeClass("hidden");
+                    $(".ProductOptionWrapper").addClass("hidden");
+                }else if (product_type[i] == 'option')
+                {
+                    $(".ProductOptionWrapper").removeClass("hidden");
+                    $(".ProductNormalWrapper").addClass("hidden");
+                }
+            }
+        }
 }
+//------------------------------------------------------//
+                 //end of function
+//------------------------------------------------------//
+
+
+//--------------------------------------------------------------//
+  // show options and option_Values component of product section
+//--------------------------------------------------------------//
+$(document).on('change','.dynamic',function(){
+
+        if($(this).val() != ''){
+            var value = $(this).val();
+            var url = $(this).data('url');
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: url,
+                method:"POST",
+                data:{value:value, _token:_token},
+                success:function(result){
+
+                    $('#option_values').html(result);
+
+                    $(function(){
+                        $('select option').filter(function(){
+                            return ($(this).val().trim()=="" && $(this).text().trim()=="");
+                        }).remove();
+                    });
+
+                    $('.selectpicker').selectpicker('refresh');
+                }
+            });
+        }
+});
+//------------------------------------------------------//
+                 //end of function
+//------------------------------------------------------//

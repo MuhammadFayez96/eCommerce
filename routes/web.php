@@ -95,12 +95,15 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::group(['prefix' => 'boughts/'], function () {
         Route::get('', 'BoughtsController@getIndex')->name('admin.boughts.getIndex');
         Route::get('get-create', 'BoughtsController@getCreateNewBought')->name('admin.boughts.getCreateNewBought');
+        Route::post('create', 'BoughtsController@createNewBought')->name('admin.boughts.createNewBought');
         Route::get('bought-section', 'BoughtsController@getBoughtSectionView')->name('admin.boughts.getBoughtSectionView');
         Route::get('option-section', 'BoughtsController@getOptionSectionView')->name('admin.boughts.getOptionSectionView');
-        Route::post('create', 'BoughtsController@createNewBought')->name('admin.boughts.createNewBought');
+        Route::get('option-section0', 'BoughtsController@getOptionSectionView0')->name('admin.boughts.getOptionSectionView0');
         Route::get('get-update/{id}', 'BoughtsController@getUpdateBought')->name('admin.boughts.getUpdateBought');
         Route::post('post-update/{id}', 'BoughtsController@updateBought')->name('admin.boughts.updateBought');
         Route::delete('delete/{id}', 'BoughtsController@deleteBought')->name('admin.boughts.deleteBought');
+
+        Route::post('option_dependent/fetch', 'BoughtsController@optionDependentFetch')->name('admin.boughts.optionDependentFetch');
     });
 
 });
