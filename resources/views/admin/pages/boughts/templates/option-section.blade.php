@@ -4,9 +4,9 @@
 
     <!-- options div -->
     <div class="form-group col-sm-4">
-        <label for="options" class="col-2 col-form-label">Options</label>
+        <label for="options" class="col-2 col-form-label">options</label>
         <div class="col-10">
-            <select class="form-control dynamic" name="options[]" id="options"  data-url="{{route('admin.boughts.optionDependentFetch')}}">
+            <select class="form-control dynamic" name="options[]" class="options"  data-url="{{route('admin.boughts.optionDependentFetch')}}">
                 @foreach($options as $option)
                     <option value="{{$option->id}}">{{$option->trans->option}}</option>
                 @endforeach
@@ -17,9 +17,16 @@
 
     <!--  option values div -->
     <div class="form-group col-sm-3">
-        <label for="option_values" class="col-2 col-form-label">Option Values</label>
+        <label for="option_values" class="col-2 col-form-label">option values</label>
         <div class="col-10">
-            <select class="selectpicker" name="option_values" id="option_values" multiple  data-selected-text-format="count > 3">
+            <select class="selectpicker" name="option_values" class="option_values" multiple  data-selected-text-format="count > 3">
+
+                @foreach($options->first()->values as $value)
+
+                    <option value="{{$value->id}}">{{$value->trans->value}}</option>
+
+                @endforeach
+
             </select>
         </div>
     </div>
@@ -27,9 +34,9 @@
 
     <!-- price div  -->
     <div class="form-group col-sm-3" >
-        <label for="price" class="col-2 col-form-label">Price</label>
+        <label for="price" class="col-2 col-form-label">price</label>
         <div class="col-10">
-            <input class="form-control" type="text" id="price"
+            <input class="form-control" type="text" class="price"
                    name="price[]"
                    placeholder="price">
         </div>

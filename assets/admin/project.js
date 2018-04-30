@@ -442,57 +442,6 @@ $(document).on('click','.remove_product_form',function(){
 //------------------------------------------------------//
 
 
-
-//------------------------------------------------------//
-    // show component of product section if product is
-    // normal or option
-//------------------------------------------------------//
-
-function ShowProductSection()
-{
-    var product_type = [];
-
-    var products = $('select[name="products[]"] option:selected');
-
-        products.each(function()
-        {
-            var type = $(this).data('product-type');
-            product_type.push(type);
-        });
-
-        for (var i = 0; i < product_type.length; i++)
-         {
-            // console.log();
-            if(product_type.length == 1)
-            {
-                if (product_type[i] == 'normal')
-                {
-                    $(".productNormalWrapper").removeClass("hidden");
-                    $(".productOptionWrapper").addClass("hidden");
-                }else if (product_type[i] == 'option')
-                {
-                    $(".productOptionWrapper").removeClass("hidden");
-                    $(".productNormalWrapper").addClass("hidden");
-                }
-            }else
-            {
-                if (product_type[i] == 'normal')
-                {
-                    $(".ProductNormalWrapper").removeClass("hidden");
-                    $(".ProductOptionWrapper").addClass("hidden");
-                }else if (product_type[i] == 'option')
-                {
-                    $(".ProductOptionWrapper").removeClass("hidden");
-                    $(".ProductNormalWrapper").addClass("hidden");
-                }
-            }
-        }
-}
-//------------------------------------------------------//
-                 //end of function
-//------------------------------------------------------//
-
-
 //--------------------------------------------------------------//
   // show options and option_Values component of product section
 //--------------------------------------------------------------//
@@ -517,7 +466,7 @@ $(document).on('change','.dynamic',function(){
                         }).remove();
                     });
 
-                    $('.selectpicker').selectpicker('refresh');
+                    $('.selectpicker').selectpicker();
                 }
             });
         }

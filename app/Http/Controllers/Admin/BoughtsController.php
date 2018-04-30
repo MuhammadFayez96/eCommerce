@@ -35,6 +35,7 @@ class BoughtsController extends Controller
         // get role where role = vendor
         $role = Role::where('role','vendor')->first();
 
+
         // get all products
         $products = Product::all();
 
@@ -53,6 +54,12 @@ class BoughtsController extends Controller
 
             // get option details
             $option->trans = $option->translate();
+            $option->values = $option->optionValues;
+
+            foreach($option->values as $value) {
+                $value->trans = $value->translate();
+            }
+
         }
 
         return view('admin.pages.boughts.add-bought',compact('role','products','options'));
@@ -65,7 +72,7 @@ class BoughtsController extends Controller
       */
     public function getBoughtSectionView()
     {
-        // get all Products
+        // get all products
         $products = Product::all();
 
         // append translated products
@@ -78,13 +85,18 @@ class BoughtsController extends Controller
         // get all Options
         $options = Option::all();
 
-        // append translated Options
+        // append translated option
         foreach ($options as $option) {
 
             // get option details
             $option->trans = $option->translate();
-        }
+            $option->values = $option->optionValues;
 
+            foreach($option->values as $value) {
+                $value->trans = $value->translate();
+            }
+
+        }
 
         return view('admin.pages.boughts.templates.bought-section', compact('products', 'options'))->render();
     }
@@ -98,14 +110,36 @@ class BoughtsController extends Controller
         // get all Options
         $options = Option::all();
 
-        // append translated Option
+        // append translated option
         foreach ($options as $option) {
 
             // get option details
             $option->trans = $option->translate();
+            $option->values = $option->optionValues;
+
+            foreach($option->values as $value) {
+                $value->trans = $value->translate();
+            }
+
         }
 
         return view('admin.pages.boughts.templates.option-section',compact('options'))->render();
+    }
+
+    /**
+    * get option's values
+    */
+    public function getOptionValues($id) {
+
+        $values = Option::find($id)->optionValues;
+
+        foreach ($values as $value) {
+
+            $value->trans = $value->translate();
+        }
+
+        return view('admin.pages.boughts.templates.option-values',compact('values'))->render();
+
     }
 
 
@@ -113,7 +147,7 @@ class BoughtsController extends Controller
       * optionDependentFetch function to get values for options
       * @return $output
       */
-    function optionDependentFetch(Request $request)
+    public function optionDependentFetch(Request $request)
     {
         // get value option from request
         $value = $request->get('value');

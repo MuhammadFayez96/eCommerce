@@ -45,7 +45,6 @@ class RolesController extends Controller
         $validation_roles = [
             'role' => 'required',
             'role_displayName_en' => 'required',
-            'notes' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_roles);
@@ -98,7 +97,6 @@ class RolesController extends Controller
         $validation_roles = [
             'role' => 'required',
             'role_displayName_en' => 'required',
-            'notes' => 'required',
         ];
 
         $validation = validator($request->all(), $validation_roles);

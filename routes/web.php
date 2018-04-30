@@ -103,7 +103,7 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::post('post-update/{id}', 'BoughtsController@updateBought')->name('admin.boughts.updateBought');
         Route::delete('delete/{id}', 'BoughtsController@deleteBought')->name('admin.boughts.deleteBought');
 
-        Route::post('option_dependent/fetch', 'BoughtsController@optionDependentFetch')->name('admin.boughts.optionDependentFetch');
+        Route::get('option-values/{id}', 'BoughtsController@getOptionValues')->name('admin.boughts.getOptionValues');
     });
 
 });
