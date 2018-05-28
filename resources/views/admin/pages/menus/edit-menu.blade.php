@@ -5,9 +5,9 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Menus</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('menus')}}">Menus</a></li>
-                <li class="breadcrumb-item"><a href="{{url('menus/get-update/'.$menu->id)}}">Edit Menus</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.menus.getIndex')  }}">Menus</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.menus.getUpdateMenu', [ 'id' => $menu->id])  }}">Edit Menus</a></li>
             </ol>
         </nav>
     </section>

@@ -5,9 +5,9 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Categories</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('categories')}}">Categories</a></li>
-                <li class="breadcrumb-item"><a href="{{url('categories/get-create')}}">Add
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.categories.getIndex')  }}">Categories</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.categories.getCreateNewCategory')  }}">Add
                         Categories</a></li>
             </ol>
         </nav>
@@ -21,7 +21,7 @@
             <!-- Default panel contents -->
             <div class="panel-heading" style="font-size: large">Categories</div>
 
-            <form action="{{route('admin.categories.createNewCategory')}}" class="add-form"
+            <form action="{{ route('admin.categories.createNewCategory') }}" class="add-form"
                   enctype="multipart/form-data"
                   method="post"
                   onsubmit="return false;">

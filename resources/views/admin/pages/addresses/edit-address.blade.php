@@ -17,9 +17,9 @@ input[name='city_name_ar[]'],  input[name='country_name_ar']{
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Addresses</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('addresses')}}">Addresses</a></li>
-                <li class="breadcrumb-item"><a href="{{url('addresses/get-create')}}">Add Addresses</a>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.addresses.getIndex')  }}">Addresses</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.addresses.getUpdateAddress', [ 'id' => $country->id])}}">Edit Addresses</a>
                 </li>
             </ol>
         </nav>

@@ -5,8 +5,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Addresses</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('addresses')}}">Addresses</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.addresses.getIndex')  }}">Addresses</a></li>
             </ol>
         </nav>
     </section>
@@ -19,12 +19,12 @@
             <!-- Default panel contents -->
             <div class="panel-heading" style="font-size: large">Addresses</div>
 
-            <form action="{{ url('admin/addresses/') }}" onsubmit="return false;">
+            <form action="{{ route('admin.addresses.getIndex') }}" onsubmit="return false;">
 
                 {{ csrf_field() }}
 
                 <div class="panel-body">
-                    <a href="{{url('addresses/get-create')}}" class="btn btn-primary btn-md">
+                    <a href="{{  route('admin.addresses.getCreateNewAddress')  }}" class="btn btn-primary btn-md">
                         <li class="fa fa-plus"> Add Address</li>
                     </a>
                 </div>

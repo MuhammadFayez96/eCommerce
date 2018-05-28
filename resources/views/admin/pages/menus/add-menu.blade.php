@@ -5,9 +5,9 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Menus</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('menus')}}">Menus</a></li>
-                <li class="breadcrumb-item"><a href="{{url('menus/get-create')}}">Add Menus</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.menus.getIndex')  }}">Menus</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.menus.getCreateNewMenu')  }}">Add Menus</a></li>
             </ol>
         </nav>
     </section>
@@ -20,10 +20,12 @@
             <!-- Default panel contents -->
             <div class="panel-heading" style="font-size: large">Menus</div>
 
-            <form action="{{route('admin.menus.createNewMenu')}}" class="add-form" enctype="multipart/form-data"
+            <form action="{{  route('admin.menus.createNewMenu')  }}" class="add-form" enctype="multipart/form-data"
                   method="post"
                   onsubmit="return false;">
+
                 {!! csrf_field() !!}
+
                 <div class="modal-body">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -33,6 +35,7 @@
                                        placeholder="EX: Electronics">
                             </div>
                         </div>
+
                         <div class="form-group col-sm-6">
                             <label for="menu" class="col-2 col-form-label" style="float: right;">اسم القائمة باللغة العربيه</label>
                             <div class="col-10">
@@ -70,7 +73,7 @@
                             <label for="notes" class="col-2 col-form-label" style="float: right;"> الملحوظات باللغة العربيه</label>
                             <div class="col-10">
                                 <div class="col-10">
-                                    <textarea class="form-control required" rows="5" name="menu_notes_en"
+                                    <textarea class="form-control required" rows="5" name="menu_notes_ar"
                                     style="direction: rtl;"></textarea>
                                 </div>
                             </div>

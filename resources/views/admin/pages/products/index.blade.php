@@ -44,7 +44,7 @@
                         @foreach($products as $product)
                             <tr>
                                 <td class="text-center">{{$product->product_translated->name}}</td>
-                                <td class="text-center">{{$product->product_translated->type}}</td>
+                                <td class="text-center">{{$product->type}}</td>
                                 <td class="text-center">{{$product->product_translated->description}}</td>
                                 <td class="text-center">{{$product->product_translated->notes}}</td>
                                 <td class="text-center">
@@ -75,4 +75,3 @@
 @section('modals')
     @include('admin.pages.products.modals.delete-product')
 @endsection
-

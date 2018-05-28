@@ -5,9 +5,9 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Addresses</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('addresses')}}">Addresses</a></li>
-                <li class="breadcrumb-item"><a href="{{url('addresses/get-create')}}">Add Addresses</a>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.addresses.getIndex')  }}">Addresses</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.addresses.getCreateNewAddress')  }}">Add Addresses</a>
                 </li>
             </ol>
         </nav>
@@ -74,7 +74,7 @@
                             <div class="col-sm-2">
                                 <button type="button" class="add_cities btn btn-primary"
                                 style="position: absolute; top: 25px;"
-                                data-url="{{route('get-add-city-templates')}}">+</button>
+                                data-route="{{route('get-add-city-templates')}}">+</button>
                             </div>
 
                         </div>
@@ -101,7 +101,7 @@ $(document).ready(function() {
     var add_cities_template = '';
 
     $.ajax({
-        url: $('.add_cities').data('url'),
+        route: $('.add_cities').data('route'),
         method: 'GET',
         async: false,
         success: function(result) {

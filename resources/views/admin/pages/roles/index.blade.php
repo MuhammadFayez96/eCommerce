@@ -5,8 +5,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Roles</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('roles')}}">Roles</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.roles.getIndex')  }}">Roles</a></li>
             </ol>
         </nav>
     </section>
@@ -19,10 +19,10 @@
             <!-- Default panel contents -->
             <div class="panel-heading" style="font-size: large">Roles</div>
 
-            <form action="{{ url('admin/roles/') }}" onsubmit="return false;">
+            <form action="{{ route('admin.roles.getIndex') }}" onsubmit="return false;">
                 {{ csrf_field() }}
                 <div class="panel-body">
-                    <a href="{{url('roles/get-create')}}" class="btn btn-primary btn-md">
+                    <a href="{{  route('admin.roles.getCreateNewRole')  }}" class="btn btn-primary btn-md">
                         <li class="fa fa-plus"> Add Role</li>
                     </a>
                 </div>
@@ -42,10 +42,10 @@
                         @foreach($roles as $role)
                             <tr>
                                 <td class="text-center">{{$role->role}}</td>
-                                <td class="text-center">{{$role->display_name_en}}</td>
-                                <td class="text-center">{{$role->display_name_ar}}</td>
+                                <td class="text-center">{{$role->en->displayName}}</td>
+                                <td class="text-center">{{$role->ar->displayName}}</td>
                                 <td class="text-center">
-                                    <a href="{{url('roles/get-update/'.$role->id)}}" class="btn btn-warning btn-sm">
+                                    <a href="{{route('admin.roles.getUpdateRole', [ 'id' => $role->id ])}}" class="btn btn-warning btn-sm">
                                         <li class="fa fa-pencil"> Edit</li>
                                     </a>
 

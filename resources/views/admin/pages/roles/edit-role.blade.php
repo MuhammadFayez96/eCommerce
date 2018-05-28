@@ -6,9 +6,9 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Roles</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('roles')}}">Roles</a></li>
-                <li class="breadcrumb-item"><a href="">Edit Role</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.roles.getIndex')  }}">Roles</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.roles.getUpdateRole', [ 'id' => $role->id ])  }}">Edit Role</a></li>
             </ol>
         </nav>
     </section>
@@ -45,7 +45,7 @@
                             <label for="role" class="col-2 col-form-label ">Display Name</label>
                             <div class="col-10">
                                 <input class="form-control required" type="text" id="role" name="role_displayName_en"
-                                       placeholder="EX: Administrator" value="{{$role->display_name_en}}">
+                                       placeholder="EX: Administrator" value="{{$role->en->displayName}}">
                             </div>
                         </div>
 
@@ -56,28 +56,49 @@
                                        name="role_displayName_ar"
                                        style="direction: rtl"
                                        placeholder="مثلا: مدير النظام"
-                                       value="{{$role->display_name_ar}}">
+                                       value="{{$role->ar->displayName}}">
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <!-- <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-12">
                             <label for="description" class="col-2 col-form-label ">Description</label>
                             <div class="col-10">
                                     <textarea class="form-control " rows="3" id="description" name="role_description_en"
-                                              placeholder="any thing"></textarea>
+                                              placeholder="any thing">{{$role->en->description}}</textarea>
                             </div>
-                        </div> -->
+                        </div>
 
+                        <div class="form-group col-sm-12">
+                            <label for="description" class="col-2 col-form-label" style="float: right;">الوصف باللغة العربيه</label>
+                            <div class="col-10">
+                                    <textarea class="form-control" rows="3" name="role_description_ar"
+                                    style="direction: rtl;">{{$role->ar->description}}</textarea>
+                            </div>
+                        </div>
+                    </diV>
+
+                    <div class="row">
                         <div class="form-group col-sm-12">
                             <label for="notes" class="col-2 col-form-label">Notes</label>
                             <div class="col-10">
-                                    <textarea class="form-control required" rows="5" id="notes" name="notes"
-                                      placeholder="any thing">{{$role->notes}}</textarea>
+                                    <textarea class="form-control required" rows="5" id="notes" name="role_notes_en"
+                                              placeholder="any thing">{{$role->en->notes}}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label for="notes" class="col-2 col-form-label" style="float: right;"> الملحوظات باللغة العربيه</label>
+                            <div class="col-10">
+                                <div class="col-10">
+                                    <textarea class="form-control required" rows="5" name="role_notes_ar"
+                                    style="direction: rtl;">{{$role->ar->notes}}</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

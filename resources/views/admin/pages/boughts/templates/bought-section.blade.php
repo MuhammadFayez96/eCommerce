@@ -19,6 +19,7 @@
                         class="btn btn-primary btn-md add_product_form">+
                 </button>
             </div>
+
             <div class="col-10" style="display: inline-block;">
                 <button type="button" name="remove_product_form"
                         class="btn btn-danger btn-md remove_product_form">-
@@ -41,7 +42,7 @@
                 <label for="price" class="col-2 col-form-label ">Price</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="price"
-                           name="price[]"
+                           name="price"
                            placeholder="price">
                 </div>
             </div>
@@ -52,7 +53,7 @@
                 <label for="serial" class="col-2 col-form-label ">Serial</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="serial"
-                           name="serial[]"
+                           name="serial"
                            placeholder="serial">
                 </div>
             </div>
@@ -63,7 +64,7 @@
                 <label for="model_number" class="col-2 col-form-label ">Model Number</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="model_number"
-                           name="model_number[]"
+                           name="model_number"
                            placeholder="model number">
                 </div>
             </div>
@@ -74,7 +75,7 @@
                 <label for="barcode" class="col-2 col-form-label ">Barcode</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="barcode"
-                           name="barcode[]"
+                           name="barcode"
                            placeholder="barcode">
                 </div>
             </div>
@@ -85,7 +86,7 @@
                 <label for="discount" class="col-2 col-form-label ">Discount</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="discount"
-                           name="discount[]"
+                           name="discount"
                            placeholder="discount">
                 </div>
             </div>
@@ -96,7 +97,7 @@
                 <label for="stock" class="col-2 col-form-label ">Stock</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="stock"
-                           name="stock[]"
+                           name="stock"
                            placeholder="stock">
                 </div>
             </div>
@@ -107,7 +108,7 @@
                 <label for="discount_type" class="col-2 col-form-label ">Discount Type</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="discount_type"
-                           name="discount_type[]"
+                           name="discount_type"
                            placeholder="discount type">
                 </div>
             </div>
@@ -118,7 +119,7 @@
                 <label for="amount" class="col-2 col-form-label ">Amount</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="amount"
-                           name="amount[]"
+                           name="amount" id="normalAmount"
                            placeholder="20">
                 </div>
             </div>
@@ -129,7 +130,7 @@
                 <label for="cost" class="col-2 col-form-label ">cost</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="cost"
-                           name="cost[]"
+                           name="cost"
                            placeholder="cost">
                 </div>
             </div>
@@ -173,7 +174,7 @@
                     <div class="form-group col-sm-3">
                         <label for="option_values" class="col-2 col-form-label">option values</label>
                         <div class="col-10">
-                            <select class="selectpicker" name="option_values" class="option_values" multiple  data-selected-text-format="count > 3">
+                            <select class="selectpicker" name="option_values[]" class="option_values" multiple  data-selected-text-format="count > 3">
 
                                 @foreach($options->first()->values as $value)
 
@@ -191,7 +192,7 @@
                         <label for="price" class="col-2 col-form-label">price</label>
                         <div class="col-10">
                             <input class="form-control" type="text" class="price"
-                                   name="price[]"
+                                   name="prices[]"
                                    placeholder="price">
                         </div>
                     </div>
@@ -218,7 +219,7 @@
                 <label for="serial" class="col-2 col-form-label ">Serial</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="serial"
-                           name="serial[]"
+                           name="serial"
                            placeholder="serial">
                 </div>
             </div>
@@ -229,7 +230,7 @@
                 <label for="model_number" class="col-2 col-form-label ">Model Number</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="model_number"
-                           name="model_number[]"
+                           name="model_number"
                            placeholder="model number">
                 </div>
             </div>
@@ -240,7 +241,7 @@
                 <label for="barcode" class="col-2 col-form-label ">Barcode</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="barcode"
-                           name="barcode[]"
+                           name="barcode"
                            placeholder="barcode">
                 </div>
             </div>
@@ -251,7 +252,7 @@
                 <label for="discount" class="col-2 col-form-label ">Discount</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="discount"
-                           name="discount[]"
+                           name="discount"
                            placeholder="discount">
                 </div>
             </div>
@@ -262,7 +263,7 @@
                 <label for="stock" class="col-2 col-form-label ">Stock</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="stock"
-                           name="stock[]"
+                           name="stock"
                            placeholder="stock">
                 </div>
             </div>
@@ -273,7 +274,7 @@
                 <label for="amount" class="col-2 col-form-label ">Amount</label>
                 <div class="col-10">
                     <input class="form-control" type="text" class="amount"
-                           name="amount[]"
+                           name="amount" id="optionAmount"
                            placeholder="amount">
                 </div>
             </div>
@@ -282,5 +283,4 @@
         <!-- end class productOption div -->
     </div>
     <!-- end class ProductOptionWrapper div -->
-
 </div>

@@ -44,6 +44,7 @@
                                        placeholder="EX: mahmoud" value="{{$user->name}}">
                             </div>
                         </div>
+
                         <div class="form-group col-sm-6">
                             <label for="password" class="col-2 col-form-label">Password (one capital litter/ 8chars /one
                                 Number)</label>
@@ -53,7 +54,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -147,7 +147,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn-update-submit btn btn-warning btn-md btn-flat">
+                        <button type="submit" class="btn btn-warning btn-md btn-flat">
                             Edit <span class="glyphicon glyphicon-save"> </span>
                         </button>
                     </div>

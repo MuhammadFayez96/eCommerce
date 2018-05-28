@@ -5,8 +5,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Menus</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('menus')}}">Menus</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.menus.getIndex')  }}">Menus</a></li>
             </ol>
         </nav>
     </section>
@@ -19,12 +19,12 @@
             <!-- Default panel contents -->
             <div class="panel-heading" style="font-size: large">Menus</div>
 
-            <form action="{{ url('admin/menus/') }}" onsubmit="return false;">
+            <form action="{{   route('admin.menus.getIndex') }}" onsubmit="return false;">
 
                 {{ csrf_field() }}
 
                 <div class="panel-body">
-                    <a href="{{url('menus/get-create')}}" class="btn btn-primary btn-md">
+                    <a href="{{  route('admin.menus.getCreateNewMenu')}}" class="btn btn-primary btn-md">
                         <li class="fa fa-plus"> Add Menu</li>
                     </a>
                 </div>
@@ -43,7 +43,7 @@
                             <tr>
                                 <td class="text-center">{{$menu->menu_translated->menu}}</td>
                                 <td class="text-center">
-                                    <a href="{{url('menus/get-update/'.$menu->id)}}" class="btn btn-warning btn-sm">
+                                    <a href="{{  route('admin.menus.getUpdateMenu',[ 'id' => $menu->id])  }}" class="btn btn-warning btn-sm">
                                         <li class="fa fa-pencil"> Edit</li>
                                     </a>
 

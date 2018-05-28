@@ -5,8 +5,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Categories</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('categories')}}">Categories</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.categories.getIndex')  }}">Categories</a></li>
             </ol>
         </nav>
     </section>
@@ -19,12 +19,12 @@
             <!-- Default panel contents -->
             <div class="panel-heading" style="font-size: large">Categories</div>
 
-            <form action="{{ url('admin/categories/') }}" onsubmit="return false;">
+            <form action="{{   route('admin.categories.getIndex') }}" onsubmit="return false;">
 
                 {{ csrf_field() }}
 
                 <div class="panel-body">
-                    <a href="{{url('categories/get-create')}}" class="btn btn-primary btn-md">
+                    <a href="{{  route('admin.categories.getCreateNewCategory')}}" class="btn btn-primary btn-md">
                         <li class="fa fa-plus"> Add Category</li>
                     </a>
                 </div>
@@ -47,13 +47,13 @@
                                     {{$category->isMain() ? 'Main' : 'Sub from :'}}
 
                                     @if(!$category->isMain())
-                                        <a href="{{url('categories/get-update/'.$category->main->id)}}" style="color: red;">
+                                        <a href="{{  route('admin.categories.getUpdateCategory', [ 'id' => $category->main->id])  }}" style="color: red;">
                                             {{ $category->main->translate()->category }}
                                         </a>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{url('categories/get-update/'.$category->id)}}" class="btn btn-warning btn-sm">
+                                    <a href="{{  route('admin.categories.getUpdateCategory', [ 'id' => $category->id])  }}" class="btn btn-warning btn-sm">
                                         <li class="fa fa-pencil"> Edit</li>
                                     </a>
 

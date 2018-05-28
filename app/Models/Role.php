@@ -22,11 +22,38 @@ class Role extends Model
      */
     protected $dates = ['deleted_at'];
 
-    protected $fillable = ['role', 'display_name_en', 'display_name_ar', 'notes'];
+    protected $fillable = ['role'];
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function roleTrans()
+    {
+        return $this->hasMany('App\Models\RoleTranslation', 'role_id', 'id');
+    }
+
 
     public function user()
     {
         return $this->hasMany('App\Models\User', 'role_id', 'id');
+    }
+
+    /**
+     * @param null $lang_code
+     * @return Model|null|object|static
+     */
+    public function translate($lang_code = null)
+    {
+        if (!$lang_code) {
+
+            $lang_id = Language::where('lang_code', app()->getLocale())->first()->id;
+        } else {
+
+            $lang_id = Language::where('lang_code', $lang_code)->first()->id;
+        }
+
+        return $this->roleTrans()->where('lang_id', $lang_id)->first();
     }
 
 }

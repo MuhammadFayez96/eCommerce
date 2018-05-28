@@ -5,8 +5,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><h4>Options</h4></li>
-                <li class="breadcrumb-item"><a href="{{url('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{url('options')}}">Options</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.home')  }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{  route('admin.options.getIndex')  }}">Options</a></li>
             </ol>
         </nav>
     </section>
@@ -18,7 +18,7 @@
         <div class="panel panel-primary">
             <!-- Default panel contents -->
             <div class="panel-heading" style="font-size: large">Options</div>
-            <form action="{{ url('admin/options/') }}" onsubmit="return false;">
+            <form action="{{ route('admin.options.getIndex') }}" onsubmit="return false;">
 
                 {{ csrf_field() }}
 

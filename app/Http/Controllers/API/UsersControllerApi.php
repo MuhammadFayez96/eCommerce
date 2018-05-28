@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -10,75 +11,44 @@ use App\Http\Controllers\Controller;
  * Class UsersController
  * @package App\Http\Controllers\API
  */
-class UsersController extends Controller
+class UsersControllerApi extends Controller
 {
     /**
-     * @param $id
-     * @return array
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getUser($id)
+    public function getIndex()
     {
-        //find user by id
-        $user = User::find($id);
+        //show 15 users from users table in db
+        $users = User::paginate(15);
 
-        if (!$user) {
-            return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'There is no user in such id!'
-            ];
-        }
+        //show all users from roles in db
+        $roles = Role::all();
 
-        //get user details
-        $user_bought = $user->details()->getResults();
-
-        $user->user_bought = $user_bought;
-
-        // check success status
-        return [
-            'status' => true,
-            'data' => [
-                'user' => $user,
-            ],
-            'msg' => 'successfully done!'
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllUsers()
-    {
-        //get all users
-        $users = User::all();
-
-        //check if no user
-        if (count($users) == 0) {
-            return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'There is no user in such id!'
-            ];
-        }
-
-        //get all user details
-        foreach ($users as $user) {
-
-            $user_bought = $user->details()->getResults();
-
-            $user->user_bought = $user_bought;
-
-        }
-
-        //check success status
+        // check if status is true
         return [
             'status' => true,
             'data' => [
                 'users' => $users,
+                'roles' => $roles
             ],
-            'msg' => 'Display All Users successfully done!'
+            'msg' => 'Data had been successfully displayed!'
         ];
+    }
 
+
+    public function getCreateNewUser()
+    {
+        //show all users from roles in db
+        $roles = Role::all();
+
+        // check if status is true
+        return [
+            'status' => true,
+            'data' => [
+                'roles' => $roles
+            ],
+            'msg' => 'Data had been successfully displayed!'
+        ];
     }
 
     /**
@@ -89,13 +59,13 @@ class UsersController extends Controller
     {
         // validation users
         $validation_users = [
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'address_1' => 'required',
-            'address_2' => 'required',
-            'mobile' => 'required',
-            'phone' => 'required',
+            'name' => 'required|min:2|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+            'address_1' => 'required|min:2',
+            'address_2' => 'required|min:2',
+            'mobile' => 'required|min:11|numeric',
+            'phone' => 'required|min:10|numeric',
             'gender' => 'required',
             'postal_code' => 'required',
             'notes' => 'required',
@@ -123,11 +93,11 @@ class UsersController extends Controller
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'There is no role in such id!'
+                'msg' => 'There is no role with such id!'
             ];
         }
 
-        //insert data into user model
+        //save data from request
         $user = User::forceCreate([
             'role_id' => $role_id,
             'name' => $request->name,
@@ -147,21 +117,66 @@ class UsersController extends Controller
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'There is no user !'
+                'msg' => 'There is no user with such id!',
             ];
         }
 
-        //check save status
-        if ($user->save()) {
-            // check save status
+
+        // check save status
+        return [
+            'status' => true,
+            'data' => null,
+            'msg' => 'User has been created successfully!',
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getUpdateUser($id)
+    {
+        //find user by id
+        $user = User::find($id);
+
+        if(!$user)
+        {
             return [
-                'status' => true,
-                'data' => [
-                    'user' => $user,
-                ],
-                'msg' => 'Data inserted successfully done!',
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no user with such id!'
             ];
         }
+
+        //find role_id
+        $role_id = $user->role_id;
+
+        //find role by id
+        $role = Role::find($role_id);
+
+        if(!$role)
+        {
+            return [
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is no role with such id!'
+            ];
+        }
+
+        //find all roles
+        $roles = Role::all();
+
+        // check if status is true
+        return [
+            'status' => true,
+            'data' => [
+                'user' => $user,
+                'roles' => $roles,
+                'role' => $role
+            ],
+            'msg' => "Data had been successfully displayed!"
+        ];
+
     }
 
     /**
@@ -173,13 +188,13 @@ class UsersController extends Controller
     {
         // validation users
         $validation_users = [
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'address_1' => 'required',
-            'address_2' => 'required',
-            'mobile' => 'required',
-            'phone' => 'required',
+            'name' => 'required|min:2',
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+            'address_1' => 'required|min:2',
+            'address_2' => 'required|min:2',
+            'mobile' => 'required|min:11|numeric',
+            'phone' => 'required|min:10|numeric',
             'gender' => 'required',
             'postal_code' => 'required',
             'notes' => 'required',
@@ -199,18 +214,9 @@ class UsersController extends Controller
         //find user by id
         $user = User::find($id);
 
-        //check if no user
-        if (!$user) {
-            return [
-                'status' => false,
-                'data' => null,
-                'msg' => 'There is no user in such id!'
-            ];
-        }
-
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->password = bcrypt($request->password);
         $user->address_1 = $request->address_1;
         $user->address_2 = $request->address_2;
         $user->mobile = $request->mobile;
@@ -219,20 +225,25 @@ class UsersController extends Controller
         $user->postal_code = $request->postal_code;
         $user->notes = $request->notes;
 
-        //check save status
-        if ($user->save()) {
 
-            //check save status
+        //if no user
+        if (!$user) {
             return [
-                'status' => true,
-                'data' => [
-                    'user' => $user,
-                ],
-                'msg' => 'Data updated successfully done',
+                'status' => false,
+                'data' => null,
+                'msg' => 'There is No user in such id!'
+            ];
+        }
+
+        if($user->save()){
+        // check save status
+        return [
+            'status' => true,
+            'data' => null,
+            'msg' => 'User has been Updated successfully!'
             ];
         }
     }
-
 
     /**
      * @param $id
@@ -245,21 +256,22 @@ class UsersController extends Controller
 
         //check if no user
         if (!$user) {
+            //check status
             return [
                 'status' => false,
                 'data' => null,
-                'msg' => 'There is no user in such id!'
+                'msg' => 'There is No user in such id!',
             ];
         }
 
         //delete user
         $user->delete();
 
-        //check success status
+        //check delete successfully
         return [
             'status' => true,
             'data' => null,
-            'msg' => 'Delete data successfully done!'
+            'msg' => 'User has been deleted successfully!',
         ];
     }
 }
